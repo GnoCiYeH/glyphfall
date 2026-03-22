@@ -118,6 +118,39 @@ export type CaptionVisualConfig = {
   activeLetterSpacing: number;
 };
 
+export type CaptionSettlePreset = 'flash' | 'outline-pop';
+export type GlyphAssemblePreset = 'content-slices';
+
+export type CaptionSettleEffectConfig = {
+  enabled: boolean;
+  preset: CaptionSettlePreset;
+  durationFrames: number;
+  intensity: number;
+  color: string;
+};
+
+export type GlyphAssembleEffectConfig = {
+  enabled: boolean;
+  preset: GlyphAssemblePreset;
+  durationFrames: number;
+  rows: number;
+  cols: number;
+  scatter: number;
+  rotation: number;
+  textRevealStart: number;
+  textRevealEnd: number;
+};
+
+export type EffectsConfig = {
+  captionSettle: CaptionSettleEffectConfig;
+  glyphAssemble: GlyphAssembleEffectConfig;
+};
+
+export type EffectsConfigInput = {
+  captionSettle?: Partial<CaptionSettleEffectConfig>;
+  glyphAssemble?: Partial<GlyphAssembleEffectConfig>;
+};
+
 export type MeasuredCaption = NormalizedCaption & {
   lines: string[];
   fontSize: number;
@@ -179,6 +212,7 @@ export type GlyphFallSceneProps = {
   speech?: SpeechSceneSource;
   layoutMap: Record<string, CaptionLayoutConfig>;
   visuals: CaptionVisualConfig;
+  effects?: EffectsConfig;
   tailHoldFrames?: number;
   backgroundColor?: string;
   debug?: {
@@ -199,6 +233,7 @@ export type SubtitleProjectConfig = {
     showCaptionBounds?: boolean;
   };
   visuals?: Partial<CaptionVisualConfig>;
+  effects?: EffectsConfigInput;
   layoutMap?: Record<string, CaptionLayoutConfigInput>;
   audioSrc?: string;
   voice?: string;
