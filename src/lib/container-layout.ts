@@ -6,6 +6,7 @@ import {
   LayoutMode,
   MeasuredCaption,
 } from './types';
+import {applyCubicBezierEasing, defaultEnterEasing} from './animation';
 
 const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
@@ -285,6 +286,7 @@ export const buildContainerEvents = (
       triggerFrame: nextCaption.startFrame,
       transitionFrames: nextConfig.enterDurationFrames,
       mode: config.mode,
+      enterEasing: nextConfig.enterEasing ?? [...defaultEnterEasing],
       translateDistancePx,
       scaleFactor,
       scaleTransformOrigin: scaleAnchor.transformOrigin,
@@ -316,7 +318,9 @@ export const resolveContainerItems = (events: ContainerEvent[], frame: number) =
     const transitionEnd = event.triggerFrame + event.transitionFrames;
 
     if (frame < transitionEnd) {
-      const progress = (frame - event.triggerFrame) / Math.max(1, event.transitionFrames);
+      const rawProgress = (frame - event.triggerFrame) / Math.max(1, event.transitionFrames);
+      const easing = activeEventLikeToEasing(event);
+      const progress = applyCubicBezierEasing(rawProgress, easing);
       return interpolateItems(event.fromItems, event.toItems, progress);
     }
 
@@ -355,7 +359,8 @@ export const resolveContainerVisualState = (events: ContainerEvent[], frame: num
     const transitionEnd = event.triggerFrame + event.transitionFrames;
 
     if (frame < transitionEnd) {
-      progress = (frame - event.triggerFrame) / Math.max(1, event.transitionFrames);
+      const rawProgress = (frame - event.triggerFrame) / Math.max(1, event.transitionFrames);
+      progress = applyCubicBezierEasing(rawProgress, activeEventLikeToEasing(event));
       break;
     }
 
@@ -385,3 +390,5 @@ export const resolveContainerVisualState = (events: ContainerEvent[], frame: num
     scaleTransformOrigin,
   };
 };
+
+const activeEventLikeToEasing = (event: ContainerEvent) => event.enterEasing ?? [...defaultEnterEasing];

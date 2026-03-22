@@ -105,26 +105,109 @@ def get_audio_duration_ms(path: Path) -> int:
     return round(float(result.stdout.strip()) * 1000)
 
 
-def build_fallback_segments(captions: list[dict[str, Any]], durations_ms: list[int]) -> list[dict[str, Any]]:
+def split_duration_by_caption(
+    captions: list[dict[str, Any]],
+    total_duration_ms: int,
+) -> list[tuple[int, int]]:
+    if len(captions) == 1:
+        return [(0, total_duration_ms)]
+
+    weights = [max(1, len(normalize_text(caption["text"]))) for caption in captions]
+    total_weight = sum(weights)
+    ranges: list[tuple[int, int]] = []
+    cursor = 0
+
+    for index, weight in enumerate(weights):
+        if index == len(weights) - 1:
+            end = total_duration_ms
+        else:
+            end = cursor + round(total_duration_ms * weight / total_weight)
+
+        ranges.append((cursor, max(cursor, end)))
+        cursor = max(cursor, end)
+
+    if ranges:
+        start, _ = ranges[-1]
+        ranges[-1] = (start, total_duration_ms)
+
+    return ranges
+
+
+def resolve_utterances(
+    payload: dict[str, Any],
+    captions: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    configured_utterances = payload.get("utterances") or []
+
+    if configured_utterances:
+        utterance_map = {utterance["id"]: utterance for utterance in configured_utterances}
+        grouped_captions: dict[str, list[dict[str, Any]]] = {}
+
+        for caption in captions:
+            utterance_id = caption.get("utteranceId") or caption.get("id")
+            grouped_captions.setdefault(utterance_id, []).append(caption)
+
+        utterances: list[dict[str, Any]] = []
+        for utterance in configured_utterances:
+            utterance_id = utterance["id"]
+            utterance_captions = grouped_captions.get(utterance_id, [])
+            if not utterance_captions:
+                continue
+
+            utterances.append(
+                {
+                    "id": utterance_id,
+                    "text": utterance["text"],
+                    "captions": utterance_captions,
+                }
+            )
+
+        unmatched_ids = [utterance_id for utterance_id in grouped_captions if utterance_id not in utterance_map]
+        if unmatched_ids:
+            missing = ", ".join(unmatched_ids)
+            raise RuntimeError(f"Missing utterance definitions for caption groups: {missing}")
+
+        return utterances
+
+    return [
+        {
+            "id": caption.get("utteranceId") or caption.get("id"),
+            "text": caption["text"],
+            "captions": [caption],
+        }
+        for caption in captions
+    ]
+
+
+def build_fallback_segments(
+    captions: list[dict[str, Any]],
+    utterances: list[dict[str, Any]],
+    utterance_durations_ms: list[int],
+) -> list[dict[str, Any]]:
     segments: list[dict[str, Any]] = []
     cursor = 0
 
-    for index, caption in enumerate(captions):
-        duration = durations_ms[index]
-        segments.append(
-            {
-                "id": caption.get("id") or f"seg-{index + 1}",
-                "text": caption["text"],
-                "startMs": cursor,
-                "endMs": cursor + duration,
-                "layoutKey": caption.get("layoutKey"),
-                "fontSize": caption.get("fontSize"),
-                "fontFamily": caption.get("fontFamily"),
-                "fontWeight": caption.get("fontWeight"),
-                "tokens": caption.get("tokens"),
-            }
-        )
-        cursor += duration
+    for utterance_index, utterance in enumerate(utterances):
+        group_duration = utterance_durations_ms[utterance_index]
+        caption_ranges = split_duration_by_caption(utterance["captions"], group_duration)
+
+        for caption, (start_offset, end_offset) in zip(utterance["captions"], caption_ranges):
+            segments.append(
+                {
+                    "id": caption.get("id"),
+                    "text": caption["text"],
+                    "startMs": cursor + start_offset,
+                    "endMs": cursor + end_offset,
+                    "layoutKey": caption.get("layoutKey"),
+                    "utteranceId": caption.get("utteranceId"),
+                    "fontSize": caption.get("fontSize"),
+                    "fontFamily": caption.get("fontFamily"),
+                    "fontWeight": caption.get("fontWeight"),
+                    "tokens": caption.get("tokens"),
+                }
+            )
+
+        cursor += group_duration
 
     return segments
 
@@ -191,6 +274,7 @@ def align_words_to_captions(
                     "startMs": matched_words[0]["startMs"],
                     "endMs": matched_words[-1]["endMs"],
                     "layoutKey": caption.get("layoutKey"),
+                    "utteranceId": caption.get("utteranceId"),
                     "fontSize": caption.get("fontSize"),
                     "fontFamily": caption.get("fontFamily"),
                     "fontWeight": caption.get("fontWeight"),
@@ -232,6 +316,7 @@ def main() -> None:
     if not captions:
         raise RuntimeError("Input captions are empty")
     input_hash = get_file_sha256(input_path)
+    utterances = resolve_utterances(payload, captions)
 
     voice = payload.get("voice", "zh-CN-XiaoxiaoNeural")
     rate = payload.get("rate", "+0%")
@@ -245,14 +330,14 @@ def main() -> None:
         temp_dir = Path(temp_dir_value)
         chunk_paths: list[Path] = []
 
-        for index, caption in enumerate(captions):
+        for index, utterance in enumerate(utterances):
             chunk_path = temp_dir / f"chunk-{index:03d}.mp3"
-            synthesize_caption(caption["text"], chunk_path, voice, rate, pitch, volume)
+            synthesize_caption(utterance["text"], chunk_path, voice, rate, pitch, volume)
             chunk_paths.append(chunk_path)
 
         concat_audio(chunk_paths, audio_path, temp_dir)
-        durations_ms = [get_audio_duration_ms(path) for path in chunk_paths]
-        fallback_segments = build_fallback_segments(captions, durations_ms)
+        utterance_durations_ms = [get_audio_duration_ms(path) for path in chunk_paths]
+        fallback_segments = build_fallback_segments(captions, utterances, utterance_durations_ms)
 
         try:
             transcribed_words = transcribe_with_faster_whisper(audio_path, args.model, args.language)
@@ -271,6 +356,7 @@ def main() -> None:
         "visuals": payload.get("visuals"),
         "layoutMap": payload.get("layoutMap"),
         "audioSrc": audio_src,
+        "utterances": payload.get("utterances"),
         "layoutSequence": layout_sequence,
         "chunking": chunking,
         "segments": [
