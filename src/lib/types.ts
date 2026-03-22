@@ -56,6 +56,7 @@ export type SpeechChunkingConfig = {
 
 export type SpeechSceneSource = {
   audioSrc?: string;
+  manifestSrc?: string;
   words?: TimedWord[];
   segments?: TimedSegment[];
   layoutSequence?: string[];
@@ -169,7 +170,7 @@ export type ContainerEvent = {
   toItems: CaptionItemState[];
 };
 
-export type SubtitleFeedSceneProps = {
+export type GlyphFallSceneProps = {
   fps: number;
   width: number;
   height: number;
@@ -192,6 +193,7 @@ export type SubtitleProjectConfig = {
   height?: number;
   tailHoldFrames?: number;
   backgroundColor?: string;
+  outputVideoName?: string;
   debug?: {
     showContainerBounds?: boolean;
     showCaptionBounds?: boolean;

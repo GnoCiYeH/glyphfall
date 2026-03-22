@@ -4,15 +4,17 @@ import {buildContainerEvents} from '../lib/container-layout';
 import {resolveSpeechScene} from '../lib/speech-scene';
 import {findActiveCaption, normalizeCaptionTimings} from '../lib/timeline';
 import {measureCaption} from '../lib/text-layout';
-import {SubtitleFeedSceneProps} from '../lib/types';
+import {GlyphFallSceneProps} from '../lib/types';
 import {getResolvedVisualFontFamily, useFontLoader} from '../lib/use-font-loader';
+import {useSpeechLoader} from '../lib/use-speech-loader';
 import {ActiveCaption} from './ActiveCaption';
 import {ContainerCaptions} from './ContainerCaptions';
 
-export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props) => {
+export const GlyphFallComposition: React.FC<GlyphFallSceneProps> = (props) => {
   useFontLoader(props.visuals);
+  const loadedSpeech = useSpeechLoader(props.speech);
   const frame = useCurrentFrame();
-  const resolvedSpeech = resolveSpeechScene(props.speech);
+  const resolvedSpeech = resolveSpeechScene(loadedSpeech);
   const captions = resolvedSpeech?.captions ?? props.captions ?? [];
   const timings = resolvedSpeech?.timings ?? props.timings ?? [];
   const normalizedCaptions = normalizeCaptionTimings(captions, timings, props.fps);
@@ -27,6 +29,11 @@ export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props)
   );
   const activeConfig = activeCaption ? props.layoutMap[activeCaption.layoutKey] : undefined;
   const rootFontFamily = getResolvedVisualFontFamily(props.visuals);
+  const resolvedAudioSrc = resolvedSpeech?.audioSrc
+    ? /^(data:|https?:|file:)/.test(resolvedSpeech.audioSrc)
+      ? resolvedSpeech.audioSrc
+      : staticFile(resolvedSpeech.audioSrc)
+    : null;
 
   return (
     <AbsoluteFill
@@ -36,7 +43,7 @@ export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props)
         fontFamily: rootFontFamily,
       }}
     >
-      {resolvedSpeech?.audioSrc ? <Audio src={staticFile(resolvedSpeech.audioSrc)} /> : null}
+      {resolvedAudioSrc ? <Audio src={resolvedAudioSrc} /> : null}
       <Sequence from={0}>
         <ContainerCaptions
           events={events}

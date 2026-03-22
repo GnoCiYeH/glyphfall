@@ -1,0 +1,95 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "tailHoldFrames": 36,
+  "backgroundColor": "#09090b",
+  "outputVideoName": "standup-roast",
+  "debug": {
+    "showContainerBounds": false,
+    "showCaptionBounds": false
+  },
+  "visuals": {
+    "fontUrl": "fonts/SmileySans-Oblique.otf",
+    "fontFamily": "\"Smiley Sans\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "fontWeight": 800,
+    "autoFitFontSize": true,
+    "maxFontSize": 104,
+    "minFontSize": 56,
+    "lineHeightRatio": 1.16,
+    "maxTextWidth": 760,
+    "paddingX": 0,
+    "paddingY": 0,
+    "borderRadius": 0,
+    "activeAnchorY": 960,
+    "activeLetterSpacing": 2
+  },
+  "layoutMap": {
+    "ccw": {
+      "mode": "rotate_ccw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 1.08
+    },
+    "cw": {
+      "mode": "rotate_cw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 0.92
+    },
+    "up": {
+      "mode": "translate_up",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 12,
+      "scaleFactor": 1.04
+    }
+  },
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "+0%",
+  "pitch": "+0Hz",
+  "volume": "+0%",
+  "layoutSequence": ["ccw", "cw", "up"],
+  "chunking": {
+    "maxCharsPerCaption": 14,
+    "minCharsPerCaption": 4,
+    "breakOnPunctuation": true,
+    "breakOnPause": true,
+    "pauseThresholdMs": 320,
+    "mergeShortTail": true
+  },
+  "utterances": [
+    {
+      "id": "u1",
+      "text": "晨会刚开始，组长问大家昨天做了什么，前端说我修了一个像素，后端说我守住了整条链路，测试说我把你们两个都复现了一遍。",
+      "voice": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "u2",
+      "text": "产品经理清了清嗓子，说我这边只有一个小需求，大家听完以后，会议室的 WiFi 都像是想主动断开连接。",
+      "voice": "zh-CN-YunxiNeural",
+      "rate": "-3%",
+      "pitch": "-1Hz"
+    },
+    {
+      "id": "u3",
+      "text": "最后轮到运维，他看着监控面板平静地说，我昨天什么都没做，因为你们居然真的没有人晚上发版，这种事值得记进团队年鉴。",
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+5%",
+      "pitch": "+4Hz"
+    }
+  ],
+  "captions": [
+    {"id": "c1", "text": "晨会刚开始", "utteranceId": "u1", "layoutKey": "ccw", "fontSize": 100},
+    {"id": "c2", "text": "组长问 大家昨天做了什么", "utteranceId": "u1", "layoutKey": "cw", "tokens": [{"text": "昨天做了什么", "color": "#93c5fd"}]},
+    {"id": "c3", "text": "前端说 我修了一个像素", "utteranceId": "u1", "layoutKey": "up", "tokens": [{"text": "一个像素", "color": "#fbbf24"}]},
+    {"id": "c4", "text": "后端说 我守住了整条链路", "utteranceId": "u1", "layoutKey": "ccw", "tokens": [{"text": "整条链路", "color": "#38bdf8"}]},
+    {"id": "c5", "text": "测试说 我把你们两个都复现了一遍", "utteranceId": "u1", "layoutKey": "cw", "fontSize": 78, "tokens": [{"text": "都复现了一遍", "color": "#fb7185"}]},
+    {"id": "c6", "text": "产品经理清了清嗓子", "utteranceId": "u2", "layoutKey": "up"},
+    {"id": "c7", "text": "我这边只有一个小需求", "utteranceId": "u2", "layoutKey": "ccw", "tokens": [{"text": "一个小需求", "color": "#f97316"}]},
+    {"id": "c8", "text": "WiFi 都像想主动断开连接", "utteranceId": "u2", "layoutKey": "cw", "fontSize": 82, "tokens": [{"text": "WiFi", "color": "#a3e635"}]},
+    {"id": "c9", "text": "最后轮到运维", "utteranceId": "u3", "layoutKey": "up"},
+    {"id": "c10", "text": "昨天什么都没做", "utteranceId": "u3", "layoutKey": "ccw", "tokens": [{"text": "什么都没做", "color": "#f8fafc"}]},
+    {"id": "c11", "text": "因为你们居然没有人晚上发版", "utteranceId": "u3", "layoutKey": "cw", "fontSize": 78, "tokens": [{"text": "晚上发版", "color": "#f472b6"}]},
+    {"id": "c12", "text": "这种事值得记进团队年鉴", "utteranceId": "u3", "layoutKey": "up", "tokens": [{"text": "团队年鉴", "color": "#f9a8d4"}]}
+  ]
+}

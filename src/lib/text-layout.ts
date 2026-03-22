@@ -28,7 +28,9 @@ const getLineUnits = (line: string) => {
   return Array.from(line).reduce((sum, character) => sum + getCharacterUnits(character), 0);
 };
 
-let sharedMeasureContext: CanvasRenderingContext2D | null = null;
+type MeasureContext = Pick<CanvasRenderingContext2D, 'font' | 'measureText'>;
+
+let sharedMeasureContext: MeasureContext | null = null;
 
 const getMeasureContext = () => {
   if (sharedMeasureContext) {

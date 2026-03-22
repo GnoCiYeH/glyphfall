@@ -1,0 +1,206 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "tailHoldFrames": 36,
+  "backgroundColor": "#09090b",
+  "outputVideoName": "merge-conflict-at-midnight",
+  "debug": {
+    "showContainerBounds": false,
+    "showCaptionBounds": false
+  },
+  "visuals": {
+    "fontUrl": "fonts/SmileySans-Oblique.otf",
+    "fontFamily": "\"Smiley Sans\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "fontWeight": 800,
+    "autoFitFontSize": true,
+    "maxFontSize": 104,
+    "minFontSize": 56,
+    "lineHeightRatio": 1.16,
+    "maxTextWidth": 760,
+    "paddingX": 0,
+    "paddingY": 0,
+    "borderRadius": 0,
+    "activeAnchorY": 960,
+    "activeLetterSpacing": 2
+  },
+  "layoutMap": {
+    "ccw": {
+      "mode": "rotate_ccw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 1.08
+    },
+    "cw": {
+      "mode": "rotate_cw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 0.92
+    },
+    "up": {
+      "mode": "translate_up",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 12,
+      "scaleFactor": 1.04
+    }
+  },
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "+0%",
+  "pitch": "+0Hz",
+  "volume": "+0%",
+  "layoutSequence": ["ccw", "cw", "up"],
+  "chunking": {
+    "maxCharsPerCaption": 14,
+    "minCharsPerCaption": 4,
+    "breakOnPunctuation": true,
+    "breakOnPause": true,
+    "pauseThresholdMs": 320,
+    "mergeShortTail": true
+  },
+  "utterances": [
+    {
+      "id": "u1",
+      "text": "凌晨一点，实习生刚把修好的支付接口推上测试，监控就像过年一样全红了。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "rate": "+0%"
+    },
+    {
+      "id": "u2",
+      "text": "他抖着手问，哥，我是不是把环境变量贴到群里了，旁边的老工程师沉默了三秒，说，你不是贴了环境变量，你是把生产数据库密码高亮加粗了。",
+      "voice": "zh-CN-YunxiNeural",
+      "rate": "-2%",
+      "pitch": "-3Hz"
+    },
+    {
+      "id": "u3",
+      "text": "全组正准备连夜回滚，角落里的自动化脚本忽然自己跑完了，还顺手把报错截图发到了老板邮箱，标题写着，今晚又是我救的场。",
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+6%",
+      "pitch": "+4Hz"
+    }
+  ],
+  "captions": [
+    {
+      "id": "c1",
+      "text": "凌晨一点",
+      "utteranceId": "u1",
+      "layoutKey": "ccw",
+      "fontSize": 108,
+      "tokens": [
+        {"text": "凌晨", "color": "#93c5fd"},
+        {"text": "一点", "color": "#f8fafc"}
+      ]
+    },
+    {
+      "id": "c2",
+      "text": "实习生刚把支付接口推上测试",
+      "utteranceId": "u1",
+      "layoutKey": "cw",
+      "fontSize": 84,
+      "tokens": [
+        {"text": "实习生", "color": "#fbbf24"},
+        {"text": "刚把支付接口推上测试", "color": "#f8fafc"}
+      ]
+    },
+    {
+      "id": "c3",
+      "text": "监控像过年一样全红了",
+      "utteranceId": "u1",
+      "layoutKey": "up",
+      "fontSize": 98,
+      "tokens": [
+        {"text": "监控", "color": "#f472b6"},
+        {"text": "像过年一样全红了", "color": "#f8fafc"}
+      ]
+    },
+    {
+      "id": "c4",
+      "text": "哥 我是不是把环境变量贴群里了",
+      "utteranceId": "u2",
+      "layoutKey": "ccw",
+      "fontSize": 88,
+      "tokens": [
+        {"text": "环境变量", "color": "#f8fafc"},
+        {"text": "贴群里了", "color": "#fb7185"}
+      ]
+    },
+    {
+      "id": "c5",
+      "text": "老工程师沉默了三秒",
+      "utteranceId": "u2",
+      "layoutKey": "cw",
+      "fontSize": 92,
+      "tokens": [
+        {"text": "老工程师", "color": "#f8fafc"},
+        {"text": "沉默了三秒", "color": "#fb7185"}
+      ]
+    },
+    {
+      "id": "c6",
+      "text": "你不是贴了环境变量",
+      "utteranceId": "u2",
+      "layoutKey": "up",
+      "fontSize": 84,
+      "tokens": [
+        {"text": "你不是", "color": "#f8fafc"},
+        {"text": "贴了环境变量", "color": "#f97316"}
+      ]
+    },
+    {
+      "id": "c7",
+      "text": "你是把生产数据库密码高亮加粗了",
+      "utteranceId": "u2",
+      "layoutKey": "ccw",
+      "fontSize": 78,
+      "tokens": [
+        {"text": "生产数据库密码", "color": "#a3e635"},
+        {"text": "高亮加粗了", "color": "#f8fafc"}
+      ]
+    },
+    {
+      "id": "c8",
+      "text": "全组正准备连夜回滚",
+      "utteranceId": "u3",
+      "layoutKey": "cw",
+      "fontSize": 90,
+      "tokens": [
+        {"text": "全组", "color": "#f8fafc"},
+        {"text": "连夜回滚", "color": "#38bdf8"}
+      ]
+    },
+    {
+      "id": "c9",
+      "text": "自动化脚本忽然自己跑完了",
+      "utteranceId": "u3",
+      "layoutKey": "up",
+      "fontSize": 80,
+      "tokens": [
+        {"text": "自动化脚本", "color": "#facc15"},
+        {"text": "忽然自己跑完了", "color": "#f8fafc"}
+      ]
+    },
+    {
+      "id": "c10",
+      "text": "还顺手把报错截图发到老板邮箱",
+      "utteranceId": "u3",
+      "layoutKey": "ccw",
+      "fontSize": 76,
+      "tokens": [
+        {"text": "报错截图", "color": "#fb7185"},
+        {"text": "发到老板邮箱", "color": "#f8fafc"}
+      ]
+    },
+    {
+      "id": "c11",
+      "text": "标题写着 今晚又是我救的场",
+      "utteranceId": "u3",
+      "layoutKey": "cw",
+      "fontSize": 86,
+      "tokens": [
+        {"text": "今晚又是", "color": "#f8fafc"},
+        {"text": "我", "color": "#93c5fd"},
+        {"text": "救的场", "color": "#f9a8d4"}
+      ]
+    }
+  ]
+}

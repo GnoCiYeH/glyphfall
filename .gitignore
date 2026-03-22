@@ -1,6 +1,8 @@
 node_modules/
 dist/
 out/
+build/
+public/studio-preview/
 .DS_Store
 .vscode/
 *.log

@@ -7,7 +7,8 @@
     "studio": "remotion studio src/index.ts",
     "render": "node scripts/render.mjs",
     "check": "tsc --noEmit",
-    "speech:generate": "python3 scripts/generate_speech_assets.py"
+    "speech:generate": "python3 scripts/generate_speech_assets.py",
+    "speech:generate:examples": "node scripts/generate_example_previews.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

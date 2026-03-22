@@ -26,10 +26,10 @@
 - 输入层已支持 `speech`
   - 可直接接已切好的分段时间
   - 也可接逐词时间并在模板内部切分
-- 音频文件通过 `public/audio/` 提供，并由 `speech.audioSrc` 引用
-- 当前推荐入口是 `src/data/subtitles.json`
+- 当前推荐输入入口是 `examples/*.json`
   - 人工维护字幕文本、画面参数、调试开关、视觉配置、位移配置、语音参数
-  - 语音和时间由脚本生成到 `src/data/generated-speech.json`
+  - 示例文件当前放在 `examples/basic.json`
+  - 语音和时间等生成产物统一输出到 `build/<input-hash>/`
   - 如果多条字幕属于同一句完整话术，优先使用顶层 `utterances` 和字幕上的 `utteranceId` 保留原始断句
   - 如果一个视频里混用多个人声，优先在 `utterances` 上配置 `voice / rate / pitch / volume`
 - 项目依赖安装优先走 `./install.sh`
@@ -40,6 +40,9 @@
 - `npm run render` 会在需要时自动补跑语音生成链路
   - 目标是避免手动重复执行 `speech:generate`
   - 仅当字幕输入文件 hash 变化、或产物缺失时才自动重跑
+  - 通过 `npm run render -- --input <json-path>` 指定输入字幕文件
+  - 输出视频统一放在 `build/out/`
+  - 如果未配置 `outputVideoName`，默认使用输入文件 hash 命名
 - 新字幕出现和容器位移必须共享同一套时长与 easing
   - 当前统一由 `layoutMap[*].enterDurationFrames` 和可选 `enterEasing` 控制
 
