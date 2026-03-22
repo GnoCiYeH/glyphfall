@@ -14,6 +14,10 @@ export type RawCaption = {
 export type RawUtterance = {
   id: string;
   text: string;
+  voice?: string;
+  rate?: string;
+  pitch?: string;
+  volume?: string;
 };
 
 export type CaptionToken = {

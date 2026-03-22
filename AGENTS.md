@@ -31,6 +31,7 @@
   - 人工维护字幕文本、画面参数、调试开关、视觉配置、位移配置、语音参数
   - 语音和时间由脚本生成到 `src/data/generated-speech.json`
   - 如果多条字幕属于同一句完整话术，优先使用顶层 `utterances` 和字幕上的 `utteranceId` 保留原始断句
+  - 如果一个视频里混用多个人声，优先在 `utterances` 上配置 `voice / rate / pitch / volume`
 - 项目依赖安装优先走 `./install.sh`
   - 负责 `npm install`
   - 负责创建 `.venv`

@@ -5,8 +5,8 @@
   "tailHoldFrames": 36,
   "backgroundColor": "#09090b",
   "debug": {
-    "showContainerBounds": true,
-    "showCaptionBounds": true
+    "showContainerBounds": false,
+    "showCaptionBounds": false
   },
   "visuals": {
     "fontUrl": "fonts/SmileySans-Oblique.otf",
@@ -60,11 +60,15 @@
   "utterances": [
     {
       "id": "u1",
-      "text": "hello 大家好，我是小派，现在为大家展示 glyphfall。"
+      "text": "hello 大家好，我是小派，现在为大家展示 glyphfall。",
+      "voice": "zh-CN-XiaoxiaoNeural"
     },
     {
       "id": "u2",
-      "text": "以及教大家怎么样做这样的旋转瀑布。"
+      "text": "以及教大家怎么样做这样的旋转瀑布。",
+      "voice": "zh-CN-YunxiNeural",
+      "rate": "+4%",
+      "pitch": "+2Hz"
     }
   ],
   "captions": [

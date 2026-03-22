@@ -137,6 +137,10 @@ def resolve_utterances(
     payload: dict[str, Any],
     captions: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
+    default_voice = payload.get("voice", "zh-CN-XiaoxiaoNeural")
+    default_rate = payload.get("rate", "+0%")
+    default_pitch = payload.get("pitch", "+0Hz")
+    default_volume = payload.get("volume", "+0%")
     configured_utterances = payload.get("utterances") or []
 
     if configured_utterances:
@@ -158,6 +162,10 @@ def resolve_utterances(
                 {
                     "id": utterance_id,
                     "text": utterance["text"],
+                    "voice": utterance.get("voice", default_voice),
+                    "rate": utterance.get("rate", default_rate),
+                    "pitch": utterance.get("pitch", default_pitch),
+                    "volume": utterance.get("volume", default_volume),
                     "captions": utterance_captions,
                 }
             )
@@ -173,6 +181,10 @@ def resolve_utterances(
         {
             "id": caption.get("utteranceId") or caption.get("id"),
             "text": caption["text"],
+            "voice": default_voice,
+            "rate": default_rate,
+            "pitch": default_pitch,
+            "volume": default_volume,
             "captions": [caption],
         }
         for caption in captions
@@ -200,6 +212,10 @@ def build_fallback_segments(
                     "endMs": cursor + end_offset,
                     "layoutKey": caption.get("layoutKey"),
                     "utteranceId": caption.get("utteranceId"),
+                    "voice": utterance.get("voice"),
+                    "rate": utterance.get("rate"),
+                    "pitch": utterance.get("pitch"),
+                    "volume": utterance.get("volume"),
                     "fontSize": caption.get("fontSize"),
                     "fontFamily": caption.get("fontFamily"),
                     "fontWeight": caption.get("fontWeight"),
@@ -275,6 +291,10 @@ def align_words_to_captions(
                     "endMs": matched_words[-1]["endMs"],
                     "layoutKey": caption.get("layoutKey"),
                     "utteranceId": caption.get("utteranceId"),
+                    "voice": fallback_segments[caption_index].get("voice"),
+                    "rate": fallback_segments[caption_index].get("rate"),
+                    "pitch": fallback_segments[caption_index].get("pitch"),
+                    "volume": fallback_segments[caption_index].get("volume"),
                     "fontSize": caption.get("fontSize"),
                     "fontFamily": caption.get("fontFamily"),
                     "fontWeight": caption.get("fontWeight"),
@@ -332,7 +352,14 @@ def main() -> None:
 
         for index, utterance in enumerate(utterances):
             chunk_path = temp_dir / f"chunk-{index:03d}.mp3"
-            synthesize_caption(utterance["text"], chunk_path, voice, rate, pitch, volume)
+            synthesize_caption(
+                utterance["text"],
+                chunk_path,
+                utterance["voice"],
+                utterance["rate"],
+                utterance["pitch"],
+                utterance["volume"],
+            )
             chunk_paths.append(chunk_path)
 
         concat_audio(chunk_paths, audio_path, temp_dir)
@@ -372,6 +399,16 @@ def main() -> None:
             "rate": rate,
             "pitch": pitch,
             "volume": volume,
+            "utteranceVoices": [
+                {
+                    "id": utterance["id"],
+                    "voice": utterance["voice"],
+                    "rate": utterance["rate"],
+                    "pitch": utterance["pitch"],
+                    "volume": utterance["volume"],
+                }
+                for utterance in utterances
+            ],
             "whisperModel": args.model,
             "transcribedWordCount": len(transcribed_words),
         },
