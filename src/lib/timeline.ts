@@ -93,10 +93,13 @@ export const getDurationInFrames = (
   return cursor + tailHoldFrames;
 };
 
-export const findActiveCaption = (captions: NormalizedCaption[], frame: number) => {
+export const findActiveCaption = <T extends NormalizedCaption>(captions: T[], frame: number) => {
   return captions.find((caption, index) => {
     const nextStart = captions[index + 1]?.startFrame ?? Number.POSITIVE_INFINITY;
-    const endFrame = Math.min(caption.endFrame, nextStart);
+    const endFrame =
+      index === captions.length - 1
+        ? Number.POSITIVE_INFINITY
+        : Math.min(caption.endFrame, nextStart);
     return frame >= caption.startFrame && frame < endFrame;
   });
 };

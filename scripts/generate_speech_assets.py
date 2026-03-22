@@ -12,9 +12,9 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = ROOT / "src" / "data" / "subtitles.json"
-DEFAULT_OUTPUT = ROOT / "src" / "data" / "generated-speech.json"
-DEFAULT_AUDIO = ROOT / "public" / "audio" / "narration.mp3"
+DEFAULT_INPUT = ROOT / "examples" / "basic.json"
+DEFAULT_OUTPUT = ROOT / "build" / "generated-speech.json"
+DEFAULT_AUDIO = ROOT / "build" / "narration.mp3"
 
 
 def run_command(command: list[str]) -> None:
@@ -36,6 +36,20 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def get_file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def mirror_for_studio_preview(input_path: Path, speech_payload: dict[str, Any], audio_path: Path) -> None:
+    preview_dir = ROOT / "public" / "studio-preview" / input_path.stem
+    preview_dir.mkdir(parents=True, exist_ok=True)
+
+    preview_audio_path = preview_dir / audio_path.name
+    shutil.copy2(audio_path, preview_audio_path)
+
+    preview_payload = {
+        **speech_payload,
+        "audioSrc": preview_audio_path.name,
+    }
+    write_json(preview_dir / "generated-speech.json", preview_payload)
 
 
 def synthesize_caption(
@@ -137,6 +151,10 @@ def resolve_utterances(
     payload: dict[str, Any],
     captions: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
+    default_voice = payload.get("voice", "zh-CN-XiaoxiaoNeural")
+    default_rate = payload.get("rate", "+0%")
+    default_pitch = payload.get("pitch", "+0Hz")
+    default_volume = payload.get("volume", "+0%")
     configured_utterances = payload.get("utterances") or []
 
     if configured_utterances:
@@ -158,6 +176,10 @@ def resolve_utterances(
                 {
                     "id": utterance_id,
                     "text": utterance["text"],
+                    "voice": utterance.get("voice", default_voice),
+                    "rate": utterance.get("rate", default_rate),
+                    "pitch": utterance.get("pitch", default_pitch),
+                    "volume": utterance.get("volume", default_volume),
                     "captions": utterance_captions,
                 }
             )
@@ -173,6 +195,10 @@ def resolve_utterances(
         {
             "id": caption.get("utteranceId") or caption.get("id"),
             "text": caption["text"],
+            "voice": default_voice,
+            "rate": default_rate,
+            "pitch": default_pitch,
+            "volume": default_volume,
             "captions": [caption],
         }
         for caption in captions
@@ -200,6 +226,10 @@ def build_fallback_segments(
                     "endMs": cursor + end_offset,
                     "layoutKey": caption.get("layoutKey"),
                     "utteranceId": caption.get("utteranceId"),
+                    "voice": utterance.get("voice"),
+                    "rate": utterance.get("rate"),
+                    "pitch": utterance.get("pitch"),
+                    "volume": utterance.get("volume"),
                     "fontSize": caption.get("fontSize"),
                     "fontFamily": caption.get("fontFamily"),
                     "fontWeight": caption.get("fontWeight"),
@@ -275,6 +305,10 @@ def align_words_to_captions(
                     "endMs": matched_words[-1]["endMs"],
                     "layoutKey": caption.get("layoutKey"),
                     "utteranceId": caption.get("utteranceId"),
+                    "voice": fallback_segments[caption_index].get("voice"),
+                    "rate": fallback_segments[caption_index].get("rate"),
+                    "pitch": fallback_segments[caption_index].get("pitch"),
+                    "volume": fallback_segments[caption_index].get("volume"),
                     "fontSize": caption.get("fontSize"),
                     "fontFamily": caption.get("fontFamily"),
                     "fontWeight": caption.get("fontWeight"),
@@ -308,14 +342,23 @@ def main() -> None:
     ensure_dependency("ffprobe")
 
     input_path = Path(args.input).resolve()
-    output_path = Path(args.output).resolve()
-    audio_path = Path(args.audio).resolve()
-
     payload = load_json(input_path)
     captions = payload.get("captions", [])
     if not captions:
         raise RuntimeError("Input captions are empty")
     input_hash = get_file_sha256(input_path)
+    default_audio_name = Path(payload.get("audioSrc") or DEFAULT_AUDIO.name).name
+
+    if args.output == str(DEFAULT_OUTPUT):
+        output_path = (ROOT / "build" / input_hash / "generated-speech.json").resolve()
+    else:
+        output_path = Path(args.output).resolve()
+
+    if args.audio == str(DEFAULT_AUDIO):
+        audio_path = (ROOT / "build" / input_hash / default_audio_name).resolve()
+    else:
+        audio_path = Path(args.audio).resolve()
+
     utterances = resolve_utterances(payload, captions)
 
     voice = payload.get("voice", "zh-CN-XiaoxiaoNeural")
@@ -324,15 +367,22 @@ def main() -> None:
     volume = payload.get("volume", "+0%")
     layout_sequence = payload.get("layoutSequence", ["ccw", "cw", "up"])
     chunking = payload.get("chunking", {"maxCharsPerCaption": 12})
-    audio_src = payload.get("audioSrc") or f"audio/{audio_path.name}"
+    audio_src = payload.get("audioSrc") or audio_path.name
 
-    with tempfile.TemporaryDirectory(prefix="subtitle-feed-") as temp_dir_value:
+    with tempfile.TemporaryDirectory(prefix="glyphfall-") as temp_dir_value:
         temp_dir = Path(temp_dir_value)
         chunk_paths: list[Path] = []
 
         for index, utterance in enumerate(utterances):
             chunk_path = temp_dir / f"chunk-{index:03d}.mp3"
-            synthesize_caption(utterance["text"], chunk_path, voice, rate, pitch, volume)
+            synthesize_caption(
+                utterance["text"],
+                chunk_path,
+                utterance["voice"],
+                utterance["rate"],
+                utterance["pitch"],
+                utterance["volume"],
+            )
             chunk_paths.append(chunk_path)
 
         concat_audio(chunk_paths, audio_path, temp_dir)
@@ -372,11 +422,22 @@ def main() -> None:
             "rate": rate,
             "pitch": pitch,
             "volume": volume,
+            "utteranceVoices": [
+                {
+                    "id": utterance["id"],
+                    "voice": utterance["voice"],
+                    "rate": utterance["rate"],
+                    "pitch": utterance["pitch"],
+                    "volume": utterance["volume"],
+                }
+                for utterance in utterances
+            ],
             "whisperModel": args.model,
             "transcribedWordCount": len(transcribed_words),
         },
     }
     write_json(output_path, generated_payload)
+    mirror_for_studio_preview(input_path, generated_payload, audio_path)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,97 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "tailHoldFrames": 36,
+  "backgroundColor": "#09090b",
+  "outputVideoName": "rubber-duck-review",
+  "debug": {
+    "showContainerBounds": false,
+    "showCaptionBounds": false
+  },
+  "visuals": {
+    "fontUrl": "fonts/SmileySans-Oblique.otf",
+    "fontFamily": "\"Smiley Sans\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "fontWeight": 800,
+    "autoFitFontSize": true,
+    "maxFontSize": 104,
+    "minFontSize": 56,
+    "lineHeightRatio": 1.16,
+    "maxTextWidth": 760,
+    "paddingX": 0,
+    "paddingY": 0,
+    "borderRadius": 0,
+    "activeAnchorY": 960,
+    "activeLetterSpacing": 2
+  },
+  "layoutMap": {
+    "ccw": {
+      "mode": "rotate_ccw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 1.08
+    },
+    "cw": {
+      "mode": "rotate_cw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 0.92
+    },
+    "up": {
+      "mode": "translate_up",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 12,
+      "scaleFactor": 1.04
+    }
+  },
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "+0%",
+  "pitch": "+0Hz",
+  "volume": "+0%",
+  "layoutSequence": ["ccw", "cw", "up"],
+  "chunking": {
+    "maxCharsPerCaption": 14,
+    "minCharsPerCaption": 4,
+    "breakOnPunctuation": true,
+    "breakOnPause": true,
+    "pauseThresholdMs": 320,
+    "mergeShortTail": true
+  },
+  "utterances": [
+    {
+      "id": "u1",
+      "text": "我把 Bug 从头到尾给工位上的小黄鸭讲了一遍，讲到第三分钟的时候，我忽然发现，根本不是接口慢，是我把缓存删在了 if 里面。",
+      "voice": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "u2",
+      "text": "小黄鸭没有说话，只是安静地看着我，那种目光像极了上周 code review 里说再想想的 Tech Lead。",
+      "voice": "zh-CN-YunxiNeural",
+      "rate": "-5%",
+      "pitch": "-1Hz"
+    },
+    {
+      "id": "u3",
+      "text": "我郑重其事地向它道谢，它还是没说话，但我总觉得它在心里记了一笔，下次提薪的时候要和我分成。",
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+4%",
+      "pitch": "+3Hz"
+    }
+  ],
+  "captions": [
+    {"id": "c1", "text": "我把 Bug 从头到尾", "utteranceId": "u1", "layoutKey": "ccw", "tokens": [{"text": "Bug", "color": "#f97316"}]},
+    {"id": "c2", "text": "讲给工位上的小黄鸭", "utteranceId": "u1", "layoutKey": "cw", "tokens": [{"text": "小黄鸭", "color": "#facc15"}]},
+    {"id": "c3", "text": "讲到第三分钟", "utteranceId": "u1", "layoutKey": "up"},
+    {"id": "c4", "text": "我忽然发现", "utteranceId": "u1", "layoutKey": "ccw", "fontSize": 104},
+    {"id": "c5", "text": "不是接口慢", "utteranceId": "u1", "layoutKey": "cw", "tokens": [{"text": "不是", "color": "#f8fafc"}, {"text": "接口慢", "color": "#38bdf8"}]},
+    {"id": "c6", "text": "是我把缓存删在了 if 里面", "utteranceId": "u1", "layoutKey": "up", "fontSize": 82},
+    {"id": "c7", "text": "小黄鸭没有说话", "utteranceId": "u2", "layoutKey": "ccw"},
+    {"id": "c8", "text": "只是安静地看着我", "utteranceId": "u2", "layoutKey": "cw"},
+    {"id": "c9", "text": "像极了上周 code review", "utteranceId": "u2", "layoutKey": "up", "tokens": [{"text": "code review", "color": "#93c5fd"}]},
+    {"id": "c10", "text": "说再想想的 Tech Lead", "utteranceId": "u2", "layoutKey": "ccw", "tokens": [{"text": "Tech Lead", "color": "#f472b6"}]},
+    {"id": "c11", "text": "我郑重其事地道谢", "utteranceId": "u3", "layoutKey": "cw"},
+    {"id": "c12", "text": "它还是没说话", "utteranceId": "u3", "layoutKey": "up"},
+    {"id": "c13", "text": "但我总觉得它记了一笔", "utteranceId": "u3", "layoutKey": "ccw"},
+    {"id": "c14", "text": "下次提薪要和我分成", "utteranceId": "u3", "layoutKey": "cw", "tokens": [{"text": "提薪", "color": "#a3e635"}, {"text": "分成", "color": "#f9a8d4"}]}
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "tailHoldFrames": 36,
+  "backgroundColor": "#09090b",
+  "outputVideoName": "tech-launch-demo",
+  "debug": {
+    "showContainerBounds": false,
+    "showCaptionBounds": false
+  },
+  "visuals": {
+    "fontUrl": "fonts/SmileySans-Oblique.otf",
+    "fontFamily": "\"Smiley Sans\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "fontWeight": 800,
+    "autoFitFontSize": true,
+    "maxFontSize": 104,
+    "minFontSize": 56,
+    "lineHeightRatio": 1.16,
+    "maxTextWidth": 760,
+    "paddingX": 0,
+    "paddingY": 0,
+    "borderRadius": 0,
+    "activeAnchorY": 960,
+    "activeLetterSpacing": 2
+  },
+  "layoutMap": {
+    "ccw": {
+      "mode": "rotate_ccw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 1.08
+    },
+    "cw": {
+      "mode": "rotate_cw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 0.92
+    },
+    "up": {
+      "mode": "translate_up",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 12,
+      "scaleFactor": 1.04
+    }
+  },
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "+0%",
+  "pitch": "+0Hz",
+  "volume": "+0%",
+  "layoutSequence": ["ccw", "cw", "up"],
+  "chunking": {
+    "maxCharsPerCaption": 14,
+    "minCharsPerCaption": 4,
+    "breakOnPunctuation": true,
+    "breakOnPause": true,
+    "pauseThresholdMs": 320,
+    "mergeShortTail": true
+  },
+  "utterances": [
+    {
+      "id": "u1",
+      "text": "发布会开场前十分钟，主持人还在后台练台词，CTO 已经把演示环境切到了生产。",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "rate": "+1%"
+    },
+    {
+      "id": "u2",
+      "text": "台下投资人问，这次 AI 功能最大的亮点是什么，产品经理深吸一口气，说它可以在用户点错按钮之前，先替用户后悔。",
+      "voice": "zh-CN-YunxiNeural",
+      "rate": "-2%",
+      "pitch": "-2Hz"
+    },
+    {
+      "id": "u3",
+      "text": "等到掌声响起来的时候，运维在角落里默默补了一句，希望你们鼓掌的时候，别把流量也一起拍上去。",
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+5%",
+      "pitch": "+3Hz"
+    }
+  ],
+  "captions": [
+    {"id": "c1", "text": "发布会开场前十分钟", "utteranceId": "u1", "layoutKey": "ccw", "tokens": [{"text": "开场前十分钟", "color": "#fbbf24"}]},
+    {"id": "c2", "text": "主持人还在后台练台词", "utteranceId": "u1", "layoutKey": "cw", "tokens": [{"text": "主持人", "color": "#f8fafc"}, {"text": "后台练台词", "color": "#93c5fd"}]},
+    {"id": "c3", "text": "CTO 已经把演示环境切到生产", "utteranceId": "u1", "layoutKey": "up", "fontSize": 82, "tokens": [{"text": "CTO", "color": "#f472b6"}, {"text": "切到生产", "color": "#fb7185"}]},
+    {"id": "c4", "text": "投资人问", "utteranceId": "u2", "layoutKey": "ccw", "fontSize": 102},
+    {"id": "c5", "text": "AI 功能最大的亮点是什么", "utteranceId": "u2", "layoutKey": "cw", "tokens": [{"text": "AI", "color": "#38bdf8"}, {"text": "最大的亮点", "color": "#f8fafc"}]},
+    {"id": "c6", "text": "它可以在用户点错按钮之前", "utteranceId": "u2", "layoutKey": "up", "fontSize": 82},
+    {"id": "c7", "text": "先替用户后悔", "utteranceId": "u2", "layoutKey": "ccw", "tokens": [{"text": "后悔", "color": "#f97316"}]},
+    {"id": "c8", "text": "掌声响起来的时候", "utteranceId": "u3", "layoutKey": "cw"},
+    {"id": "c9", "text": "运维在角落里补了一句", "utteranceId": "u3", "layoutKey": "up", "tokens": [{"text": "运维", "color": "#a3e635"}]},
+    {"id": "c10", "text": "别把流量也一起拍上去", "utteranceId": "u3", "layoutKey": "ccw", "tokens": [{"text": "流量", "color": "#f9a8d4"}]}
+  ]
+}

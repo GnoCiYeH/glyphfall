@@ -1,0 +1,95 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "tailHoldFrames": 36,
+  "backgroundColor": "#09090b",
+  "outputVideoName": "deploy-friday",
+  "debug": {
+    "showContainerBounds": false,
+    "showCaptionBounds": false
+  },
+  "visuals": {
+    "fontUrl": "fonts/SmileySans-Oblique.otf",
+    "fontFamily": "\"Smiley Sans\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "fontWeight": 800,
+    "autoFitFontSize": true,
+    "maxFontSize": 104,
+    "minFontSize": 56,
+    "lineHeightRatio": 1.16,
+    "maxTextWidth": 760,
+    "paddingX": 0,
+    "paddingY": 0,
+    "borderRadius": 0,
+    "activeAnchorY": 960,
+    "activeLetterSpacing": 2
+  },
+  "layoutMap": {
+    "ccw": {
+      "mode": "rotate_ccw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 1.08
+    },
+    "cw": {
+      "mode": "rotate_cw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 0.92
+    },
+    "up": {
+      "mode": "translate_up",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 12,
+      "scaleFactor": 1.04
+    }
+  },
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "+0%",
+  "pitch": "+0Hz",
+  "volume": "+0%",
+  "layoutSequence": ["ccw", "cw", "up"],
+  "chunking": {
+    "maxCharsPerCaption": 14,
+    "minCharsPerCaption": 4,
+    "breakOnPunctuation": true,
+    "breakOnPause": true,
+    "pauseThresholdMs": 320,
+    "mergeShortTail": true
+  },
+  "utterances": [
+    {
+      "id": "u1",
+      "text": "周五傍晚，产品经理把最后一条需求拍在桌上，说这个改动很小，十分钟就能上线。",
+      "voice": "zh-CN-XiaoxiaoNeural"
+    },
+    {
+      "id": "u2",
+      "text": "后端抬头看了看需求，轻轻问了一句，你说的十分钟，是地球时间，还是老板时间。",
+      "voice": "zh-CN-YunxiNeural",
+      "rate": "-4%",
+      "pitch": "-2Hz"
+    },
+    {
+      "id": "u3",
+      "text": "等部署完成的时候，办公室的灯已经灭了，只有 CI 还在屏幕上闪着一行字，祝你们周末愉快。",
+      "voice": "zh-CN-XiaoyiNeural",
+      "rate": "+3%",
+      "pitch": "+3Hz"
+    }
+  ],
+  "captions": [
+    {"id": "c1", "text": "周五傍晚", "utteranceId": "u1", "layoutKey": "ccw", "tokens": [{"text": "周五", "color": "#fbbf24"}, {"text": "傍晚", "color": "#f8fafc"}]},
+    {"id": "c2", "text": "最后一条需求拍在桌上", "utteranceId": "u1", "layoutKey": "cw", "tokens": [{"text": "最后一条需求", "color": "#f472b6"}, {"text": "拍在桌上", "color": "#f8fafc"}]},
+    {"id": "c3", "text": "这个改动很小", "utteranceId": "u1", "layoutKey": "up", "fontSize": 102},
+    {"id": "c4", "text": "十分钟就能上线", "utteranceId": "u1", "layoutKey": "ccw", "tokens": [{"text": "十分钟", "color": "#38bdf8"}, {"text": "就能上线", "color": "#f8fafc"}]},
+    {"id": "c5", "text": "后端抬头看了看需求", "utteranceId": "u2", "layoutKey": "cw", "fontSize": 84},
+    {"id": "c6", "text": "你说的十分钟", "utteranceId": "u2", "layoutKey": "up", "tokens": [{"text": "十分钟", "color": "#f97316"}]},
+    {"id": "c7", "text": "是地球时间", "utteranceId": "u2", "layoutKey": "ccw", "tokens": [{"text": "地球时间", "color": "#a3e635"}]},
+    {"id": "c8", "text": "还是老板时间", "utteranceId": "u2", "layoutKey": "cw", "tokens": [{"text": "老板时间", "color": "#fb7185"}]},
+    {"id": "c9", "text": "部署完成的时候", "utteranceId": "u3", "layoutKey": "up", "fontSize": 90},
+    {"id": "c10", "text": "办公室的灯已经灭了", "utteranceId": "u3", "layoutKey": "ccw"},
+    {"id": "c11", "text": "只有 CI 还在闪", "utteranceId": "u3", "layoutKey": "cw", "tokens": [{"text": "CI", "color": "#93c5fd"}]},
+    {"id": "c12", "text": "祝你们周末愉快", "utteranceId": "u3", "layoutKey": "up", "tokens": [{"text": "周末愉快", "color": "#f9a8d4"}]}
+  ]
+}
