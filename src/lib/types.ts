@@ -80,6 +80,14 @@ export type CaptionLayoutConfig = {
   scaleFactor?: number;
 };
 
+export type CaptionLayoutConfigInput = {
+  mode: LayoutMode;
+  enterDurationFrames?: number;
+  containerTransitionFrames?: number;
+  translateDistancePx?: number;
+  scaleFactor?: number;
+};
+
 export type CaptionVisualConfig = {
   fontFamily: string;
   fontUrl?: string;
@@ -162,6 +170,28 @@ export type SubtitleFeedSceneProps = {
     showContainerBounds?: boolean;
     showCaptionBounds?: boolean;
   };
+};
+
+export type SubtitleProjectConfig = {
+  fps?: number;
+  width?: number;
+  height?: number;
+  tailHoldFrames?: number;
+  backgroundColor?: string;
+  debug?: {
+    showContainerBounds?: boolean;
+    showCaptionBounds?: boolean;
+  };
+  visuals?: Partial<CaptionVisualConfig>;
+  layoutMap?: Record<string, CaptionLayoutConfigInput>;
+  audioSrc?: string;
+  voice?: string;
+  rate?: string;
+  pitch?: string;
+  volume?: string;
+  captions: RawCaption[];
+  layoutSequence?: string[];
+  chunking?: Partial<SpeechChunkingConfig>;
 };
 
 export type PreparedScene = {

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import hashlib
 import json
 import re
 import shutil
@@ -31,6 +32,10 @@ def load_json(path: Path) -> dict[str, Any]:
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def get_file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def synthesize_caption(
@@ -226,6 +231,7 @@ def main() -> None:
     captions = payload.get("captions", [])
     if not captions:
         raise RuntimeError("Input captions are empty")
+    input_hash = get_file_sha256(input_path)
 
     voice = payload.get("voice", "zh-CN-XiaoxiaoNeural")
     rate = payload.get("rate", "+0%")
@@ -256,6 +262,14 @@ def main() -> None:
             transcribed_words = []
 
     generated_payload = {
+        "fps": payload.get("fps"),
+        "width": payload.get("width"),
+        "height": payload.get("height"),
+        "tailHoldFrames": payload.get("tailHoldFrames"),
+        "backgroundColor": payload.get("backgroundColor"),
+        "debug": payload.get("debug"),
+        "visuals": payload.get("visuals"),
+        "layoutMap": payload.get("layoutMap"),
         "audioSrc": audio_src,
         "layoutSequence": layout_sequence,
         "chunking": chunking,
@@ -267,6 +281,7 @@ def main() -> None:
             for index, segment in enumerate(segments)
         ],
         "meta": {
+            "inputHash": input_hash,
             "voice": voice,
             "rate": rate,
             "pitch": pitch,

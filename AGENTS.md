@@ -28,13 +28,16 @@
   - 也可接逐词时间并在模板内部切分
 - 音频文件通过 `public/audio/` 提供，并由 `speech.audioSrc` 引用
 - 当前推荐入口是 `src/data/subtitles.json`
-  - 人工只维护字幕文本与可选 `layoutKey`
+  - 人工维护字幕文本、画面参数、调试开关、视觉配置、位移配置、语音参数
   - 语音和时间由脚本生成到 `src/data/generated-speech.json`
 - 项目依赖安装优先走 `./install.sh`
   - 负责 `npm install`
   - 负责创建 `.venv`
   - 负责安装语音链路需要的 Python 依赖
   - Windows 对应入口是 `scripts/install.ps1`
+- `npm run render` 会在需要时自动补跑语音生成链路
+  - 目标是避免手动重复执行 `speech:generate`
+  - 仅当字幕输入文件 hash 变化、或产物缺失时才自动重跑
 
 ## 后续迭代约定
 
@@ -51,3 +54,6 @@
 - 每次提交前同步更新 `README.md`
 - 如果某次改动改变了核心动画规则、对齐规则或输入格式，同步更新本文件
 - 不在未确认的情况下运行渲染输出；优先让使用者自己预览验收
+- 后续不要直接推送 `master`
+- 远端协作统一走 `feature branch + pull request`
+- 如果需要推送代码，先新建功能分支，再推送分支并发起 PR

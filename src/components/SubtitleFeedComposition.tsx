@@ -5,10 +5,12 @@ import {resolveSpeechScene} from '../lib/speech-scene';
 import {findActiveCaption, normalizeCaptionTimings} from '../lib/timeline';
 import {measureCaption} from '../lib/text-layout';
 import {SubtitleFeedSceneProps} from '../lib/types';
+import {getResolvedVisualFontFamily, useFontLoader} from '../lib/use-font-loader';
 import {ActiveCaption} from './ActiveCaption';
 import {ContainerCaptions} from './ContainerCaptions';
 
 export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props) => {
+  useFontLoader(props.visuals);
   const frame = useCurrentFrame();
   const resolvedSpeech = resolveSpeechScene(props.speech);
   const captions = resolvedSpeech?.captions ?? props.captions ?? [];
@@ -24,20 +26,7 @@ export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props)
     props.visuals.activeAnchorY,
   );
   const activeConfig = activeCaption ? props.layoutMap[activeCaption.layoutKey] : undefined;
-  const resolvedFontUrl = props.visuals.fontUrl ? staticFile(props.visuals.fontUrl) : null;
-  const fontFaceCss = resolvedFontUrl
-    ? `
-@font-face {
-  font-family: "GlyphFallCustomFont";
-  src: url("${resolvedFontUrl}");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}`
-    : '';
-  const rootFontFamily = resolvedFontUrl
-    ? `"GlyphFallCustomFont", ${props.visuals.fontFamily}`
-    : props.visuals.fontFamily;
+  const rootFontFamily = getResolvedVisualFontFamily(props.visuals);
 
   return (
     <AbsoluteFill
@@ -47,7 +36,6 @@ export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props)
         fontFamily: rootFontFamily,
       }}
     >
-      {fontFaceCss ? <style>{fontFaceCss}</style> : null}
       {resolvedSpeech?.audioSrc ? <Audio src={staticFile(resolvedSpeech.audioSrc)} /> : null}
       <Sequence from={0}>
         <ContainerCaptions

@@ -1,4 +1,5 @@
 import {CaptionVisualConfig, MeasuredCaption, NormalizedCaption} from './types';
+import {getResolvedVisualFontFamily} from './use-font-loader';
 
 const SAFETY_WIDTH_PX = 4;
 const MIN_ABSOLUTE_FONT_SIZE = 12;
@@ -57,8 +58,7 @@ const estimateLineWidth = (units: number, fontSize: number, visuals: CaptionVisu
   return contentWidth + spacingWidth + visuals.paddingX * 2 + SAFETY_WIDTH_PX;
 };
 
-const getVisualFontFamily = (visuals: CaptionVisualConfig) =>
-  visuals.fontUrl ? `"GlyphFallCustomFont", ${visuals.fontFamily}` : visuals.fontFamily;
+const getVisualFontFamily = (visuals: CaptionVisualConfig) => getResolvedVisualFontFamily(visuals);
 
 const getResolvedFontFamily = (caption: NormalizedCaption, visuals: CaptionVisualConfig) =>
   caption.fontFamily ?? getVisualFontFamily(visuals);

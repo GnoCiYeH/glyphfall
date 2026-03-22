@@ -1,4 +1,48 @@
 {
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "tailHoldFrames": 36,
+  "backgroundColor": "#09090b",
+  "debug": {
+    "showContainerBounds": true,
+    "showCaptionBounds": true
+  },
+  "visuals": {
+    "fontUrl": "fonts/LXGWWenKaiGBLite-Regular.ttf",
+    "fontFamily": "\"WenQuanYi Micro Hei\", \"Noto Sans CJK SC\", \"Source Han Sans SC\", \"Noto Sans SC\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"SimHei\", sans-serif",
+    "fontWeight": 800,
+    "autoFitFontSize": true,
+    "maxFontSize": 104,
+    "minFontSize": 56,
+    "lineHeightRatio": 1.16,
+    "maxTextWidth": 760,
+    "paddingX": 0,
+    "paddingY": 0,
+    "borderRadius": 0,
+    "activeAnchorY": 960,
+    "activeLetterSpacing": 2
+  },
+  "layoutMap": {
+    "ccw": {
+      "mode": "rotate_ccw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 1.08
+    },
+    "cw": {
+      "mode": "rotate_cw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 0.92
+    },
+    "up": {
+      "mode": "translate_up",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 12,
+      "scaleFactor": 1.04
+    }
+  },
   "audioSrc": "audio/narration.mp3",
   "layoutSequence": [
     "ccw",
@@ -21,6 +65,8 @@
       "endMs": 2064,
       "layoutKey": "ccw",
       "fontSize": 98,
+      "fontFamily": null,
+      "fontWeight": null,
       "tokens": [
         {
           "text": "短句",
@@ -43,6 +89,8 @@
       "endMs": 8160,
       "layoutKey": "cw",
       "fontSize": 86,
+      "fontFamily": null,
+      "fontWeight": null,
       "tokens": [
         {
           "text": "这一条",
@@ -73,6 +121,8 @@
       "endMs": 12072,
       "layoutKey": "up",
       "fontSize": 78,
+      "fontFamily": null,
+      "fontWeight": null,
       "tokens": null
     },
     {
@@ -82,6 +132,8 @@
       "endMs": 14088,
       "layoutKey": "ccw",
       "fontSize": 108,
+      "fontFamily": null,
+      "fontWeight": null,
       "tokens": [
         {
           "text": "再来",
@@ -104,6 +156,8 @@
       "endMs": 23376,
       "layoutKey": "cw",
       "fontSize": 92,
+      "fontFamily": null,
+      "fontWeight": null,
       "tokens": [
         {
           "text": "最后给一条",
@@ -138,6 +192,8 @@
       "endMs": 26496,
       "layoutKey": "up",
       "fontSize": 84,
+      "fontFamily": null,
+      "fontWeight": null,
       "tokens": null
     },
     {
@@ -147,6 +203,8 @@
       "endMs": 28200,
       "layoutKey": "ccw",
       "fontSize": 112,
+      "fontFamily": null,
+      "fontWeight": null,
       "tokens": [
         {
           "text": "测试",
@@ -160,6 +218,7 @@
     }
   ],
   "meta": {
+    "inputHash": "7fec4ef47d4b48edc3558f51318ff5378314d90c48c6120c49d3c195c31f79fb",
     "voice": "zh-CN-XiaoxiaoNeural",
     "rate": "+0%",
     "pitch": "+0Hz",
