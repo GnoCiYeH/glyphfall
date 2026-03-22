@@ -22,6 +22,7 @@ export const defaultLayoutMap: Record<string, CaptionLayoutConfig> = {
 };
 
 export const defaultVisuals: CaptionVisualConfig = {
+  fontUrl: 'fonts/LXGWWenKaiGBLite-Regular.ttf',
   fontFamily:
     '"WenQuanYi Micro Hei", "Noto Sans CJK SC", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SimHei", sans-serif',
   fontWeight: 800,
