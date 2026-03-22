@@ -1,11 +1,11 @@
 {
-  "name": "subtitle-feed",
+  "name": "glyphfall",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "render": "remotion render src/index.ts SubtitleFeed out/subtitle-feed.mp4",
+    "render": "node scripts/render.mjs",
     "check": "tsc --noEmit",
     "speech:generate": "python3 scripts/generate_speech_assets.py"
   },

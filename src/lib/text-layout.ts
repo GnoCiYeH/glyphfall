@@ -1,7 +1,7 @@
 import {CaptionVisualConfig, MeasuredCaption, NormalizedCaption} from './types';
 
 const SAFETY_WIDTH_PX = 4;
-const MIN_ABSOLUTE_FONT_SIZE = 18;
+const MIN_ABSOLUTE_FONT_SIZE = 12;
 
 const getCharacterUnits = (character: string) => {
   if (character === ' ') {
@@ -57,14 +57,29 @@ const estimateLineWidth = (units: number, fontSize: number, visuals: CaptionVisu
   return contentWidth + spacingWidth + visuals.paddingX * 2 + SAFETY_WIDTH_PX;
 };
 
-const measureTextWidth = (text: string, fontSize: number, visuals: CaptionVisualConfig) => {
+const getVisualFontFamily = (visuals: CaptionVisualConfig) =>
+  visuals.fontUrl ? `"GlyphFallCustomFont", ${visuals.fontFamily}` : visuals.fontFamily;
+
+const getResolvedFontFamily = (caption: NormalizedCaption, visuals: CaptionVisualConfig) =>
+  caption.fontFamily ?? getVisualFontFamily(visuals);
+
+const getResolvedFontWeight = (caption: NormalizedCaption, visuals: CaptionVisualConfig) =>
+  caption.fontWeight ?? visuals.fontWeight;
+
+const measureTextWidth = (
+  text: string,
+  fontSize: number,
+  fontFamily: string,
+  fontWeight: number,
+  visuals: CaptionVisualConfig,
+) => {
   const context = getMeasureContext();
 
   if (!context) {
     return estimateLineWidth(getLineUnits(text), fontSize, visuals);
   }
 
-  context.font = `${visuals.fontWeight} ${fontSize}px ${visuals.fontFamily}`;
+  context.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   const measuredWidth = context.measureText(text).width;
   const spacingWidth = Math.max(0, Array.from(text).length - 1) * visuals.activeLetterSpacing;
 
@@ -75,28 +90,65 @@ export const measureCaption = (
   caption: NormalizedCaption,
   visuals: CaptionVisualConfig,
 ): MeasuredCaption => {
-  let fontSize = visuals.maxFontSize;
+  const targetText = caption.tokens?.map((token) => token.text).join('') || caption.text;
+  const fontFamily = getResolvedFontFamily(caption, visuals);
+  const fontWeight = getResolvedFontWeight(caption, visuals);
+  let fontSize = visuals.autoFitFontSize
+    ? visuals.maxFontSize
+    : Math.min(caption.fontSize ?? visuals.maxFontSize, visuals.maxFontSize);
 
-  while (
-    fontSize > visuals.minFontSize &&
-    measureTextWidth(caption.text, fontSize, visuals) > visuals.maxTextWidth
-  ) {
-    fontSize -= 2;
-  }
+  if (visuals.autoFitFontSize) {
+    const initialWidth = measureTextWidth(targetText, fontSize, fontFamily, fontWeight, visuals);
 
-  while (
-    fontSize > MIN_ABSOLUTE_FONT_SIZE &&
-    measureTextWidth(caption.text, fontSize, visuals) > visuals.maxTextWidth
-  ) {
-    fontSize -= 1;
+    if (initialWidth > visuals.maxTextWidth) {
+      const contentMaxWidth = Math.max(1, visuals.maxTextWidth);
+      const scaledFontSize = Math.floor((fontSize * contentMaxWidth) / initialWidth);
+      fontSize = Math.max(MIN_ABSOLUTE_FONT_SIZE, scaledFontSize);
+    }
+
+    while (
+      fontSize > visuals.minFontSize &&
+      measureTextWidth(targetText, fontSize, fontFamily, fontWeight, visuals) > visuals.maxTextWidth
+    ) {
+      fontSize -= 2;
+    }
+
+    while (
+      fontSize > MIN_ABSOLUTE_FONT_SIZE &&
+      measureTextWidth(targetText, fontSize, fontFamily, fontWeight, visuals) > visuals.maxTextWidth
+    ) {
+      fontSize -= 1;
+    }
+
+    if (measureTextWidth(targetText, fontSize, fontFamily, fontWeight, visuals) > visuals.maxTextWidth) {
+      let emergencyFontSize = fontSize;
+
+      while (
+        emergencyFontSize > 1 &&
+        measureTextWidth(
+          targetText,
+          emergencyFontSize,
+          fontFamily,
+          fontWeight,
+          visuals,
+        ) > visuals.maxTextWidth
+      ) {
+        emergencyFontSize -= 1;
+      }
+
+      fontSize = emergencyFontSize;
+    }
   }
 
   const lineHeight = Math.ceil(fontSize * visuals.lineHeightRatio);
-  const lines = [caption.text];
+  const lines = [targetText];
   const width = Math.ceil(
     Math.max(
       fontSize + visuals.paddingX * 2,
-      Math.min(visuals.maxTextWidth, measureTextWidth(caption.text, fontSize, visuals)),
+      Math.min(
+        visuals.maxTextWidth,
+        measureTextWidth(targetText, fontSize, fontFamily, fontWeight, visuals),
+      ),
     ),
   );
   const height = Math.ceil(lineHeight + visuals.paddingY * 2);
@@ -105,6 +157,8 @@ export const measureCaption = (
     ...caption,
     lines,
     fontSize,
+    fontFamily,
+    fontWeight,
     lineHeight,
     width,
     height,

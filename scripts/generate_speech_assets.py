@@ -113,6 +113,10 @@ def build_fallback_segments(captions: list[dict[str, Any]], durations_ms: list[i
                 "startMs": cursor,
                 "endMs": cursor + duration,
                 "layoutKey": caption.get("layoutKey"),
+                "fontSize": caption.get("fontSize"),
+                "fontFamily": caption.get("fontFamily"),
+                "fontWeight": caption.get("fontWeight"),
+                "tokens": caption.get("tokens"),
             }
         )
         cursor += duration
@@ -182,6 +186,10 @@ def align_words_to_captions(
                     "startMs": matched_words[0]["startMs"],
                     "endMs": matched_words[-1]["endMs"],
                     "layoutKey": caption.get("layoutKey"),
+                    "fontSize": caption.get("fontSize"),
+                    "fontFamily": caption.get("fontFamily"),
+                    "fontWeight": caption.get("fontWeight"),
+                    "tokens": caption.get("tokens"),
                 }
             )
             continue

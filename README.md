@@ -1,6 +1,6 @@
-# Subtitle Feed Template
+# GlyphFall
 
-Remotion + React 字幕瀑布流模板。目标是输入一组字幕数据，得到“当前字幕放大出现 + 历史字幕持续沉淀进全局容器”的连续画面。
+GlyphFall 是一个基于 Remotion + React 的字幕瀑布流模板。目标是输入一组字幕数据，得到“当前字幕放大出现 + 历史字幕持续沉淀进全局容器”的连续画面。
 
 ## 当前实现
 
@@ -43,10 +43,12 @@ Remotion + React 字幕瀑布流模板。目标是输入一组字幕数据，得
   - 组合模板默认数据源
 - `src/data/subtitles.json`
   - 唯一人工输入的字幕数据
+  - 当前默认样例覆盖长短句、词级颜色、节点字号和不同位移/缩放效果
 - `src/data/generated-speech.json`
   - Edge TTS / Whisper 脚本生成结果
 - `scripts/generate_speech_assets.py`
   - 本地生成音频与语音时间数据
+  - 会保留 `fontSize`、`fontFamily`、`fontWeight`、`tokens` 等字幕样式字段
 
 ## 输入格式
 
@@ -57,6 +59,50 @@ captions: [
   {id: 'c3', text: '第三条字幕', layoutKey: 'up'},
 ]
 ```
+
+也支持词级颜色和节点字号：
+
+```ts
+captions: [
+  {
+    id: 'c1',
+    text: '第一条字幕',
+    layoutKey: 'ccw',
+    fontSize: 80,
+    tokens: [
+      {text: '第一条', color: '#facc15'},
+      {text: '字幕', color: '#ffffff'},
+    ],
+  },
+]
+```
+
+也支持全局字体配置和单条字幕字体覆盖：
+
+```ts
+visuals: {
+  fontFamily: '"WenQuanYi Micro Hei", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif',
+  fontUrl: 'fonts/NotoSansCJKsc-Regular.otf',
+}
+
+captions: [
+  {
+    id: 'c1',
+    text: '第一条字幕',
+    layoutKey: 'ccw',
+    fontFamily: '"Source Han Serif SC", serif',
+    fontWeight: 700,
+  },
+]
+```
+
+注意：
+
+- 当 `visuals.autoFitFontSize = true` 时，模板会自动缩字并强制单行
+- 这时会忽略单条字幕的 `fontSize`
+- 当 `visuals.autoFitFontSize = false` 时，才会优先使用每条字幕自己的 `fontSize`
+- `visuals.fontUrl` 可选；如果提供，就会从 `public/` 下加载字体文件
+- 单条字幕可用 `fontFamily` / `fontWeight` 覆盖全局字体配置
 
 ```ts
 timings: [
@@ -98,6 +144,9 @@ speech: {
   layoutSequence: ['ccw', 'cw', 'up'],
   chunking: {
     maxCharsPerCaption: 12,
+    minCharsPerCaption: 4,
+    breakOnPause: true,
+    pauseThresholdMs: 360,
   },
   words: [
     {text: '你好，', startMs: 0, endMs: 300},
@@ -111,6 +160,8 @@ speech: {
 
 - 超过 `maxCharsPerCaption` 时切分
 - 命中标点时优先切分
+- 停顿超过 `pauseThresholdMs` 时优先切分
+- 只有累计到 `minCharsPerCaption` 后才会因为停顿切开，避免过短碎片
 - 很短的尾段会合并回上一段
 
 ## layoutKey 配置
@@ -121,16 +172,19 @@ speech: {
     mode: 'rotate_ccw_90',
     enterDurationFrames: 18,
     containerTransitionFrames: 14,
+    scaleFactor: 1,
   },
   cw: {
     mode: 'rotate_cw_90',
     enterDurationFrames: 18,
     containerTransitionFrames: 14,
+    scaleFactor: 1,
   },
   up: {
     mode: 'translate_up',
     enterDurationFrames: 18,
     containerTransitionFrames: 12,
+    scaleFactor: 1,
   },
 }
 ```
@@ -140,26 +194,132 @@ speech: {
 - `enterDurationFrames` 控制当前字幕出现阶段时长
 - 容器位移最终以“新字幕出现时长”为准做强同步
 - `translate_up` 默认按“容器底边对齐新字幕顶边”计算位移，不再用固定像素
+- 容器在主位移/缩放后，还会额外补一段与新字幕盒模型的对齐位移
+  - 容器在新字幕左边：容器右下角对齐新字幕左下角
+  - 容器在新字幕上面：容器左下角对齐新字幕左上角
+  - 容器在新字幕右边：容器左下角对齐新字幕右下角
+- `scaleFactor` 是额外可选项，现有三种 `mode` 仍然必填
+- 如果设置了 `scaleFactor`
+  - 容器在新字幕左边时，以右下角为原点缩放
+  - 容器在新字幕右边或者上方时，以左下角为原点缩放
+
+## 字体配置
+
+中文渲染如果出现乱码，通常不是模板逻辑问题，而是当前渲染环境里缺少可用的中文字库。
+
+当前默认字体栈已经改成偏中文环境：
+
+```ts
+'"WenQuanYi Micro Hei", "Noto Sans CJK SC", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SimHei", sans-serif'
+```
+
+如果当前机器仍然没有这些字体，推荐直接放一个字体文件到 `public/fonts/`，然后在 `visuals` 里配置：
+
+```ts
+visuals: {
+  fontFamily: '"Noto Sans CJK SC", "Microsoft YaHei", sans-serif',
+  fontUrl: 'fonts/NotoSansCJKsc-Regular.otf',
+}
+```
+
+规则：
+
+- `fontUrl` 路径相对于 `public/`
+- 模板会在运行时自动注入 `@font-face`
+- 文本测量和最终渲染会使用同一套字体信息，避免红框和实际宽度不一致
+- 单条字幕可继续通过 `fontFamily` / `fontWeight` 做局部覆盖
 
 ## 运行方式
 
+Linux / macOS:
+
 ```bash
 ./install.sh
+```
+
+Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
+```
+
+或者：
+
+```bat
+scripts\install.bat
 ```
 
 如果要接音频文件，把文件放到 `public/audio/`，然后在 `speech.audioSrc` 中填相对路径，比如 `audio/narration.mp3`。
 
 生成语音和时间数据：
 
+Linux / macOS:
+
 ```bash
 source .venv/bin/activate
 npm run speech:generate
 ```
 
+Windows:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python .\scripts\generate_speech_assets.py
+```
+
+渲染 MP4：
+
+Linux / macOS:
+
+```bash
+source .venv/bin/activate
+npm run render
+```
+
+Windows:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\render.ps1
+```
+
+Windows 也可以直接执行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\render.ps1
+```
+
+或者：
+
+```bat
+scripts\render.bat
+```
+
+默认输出路径：
+
+```bash
+out/subtitle-feed.mp4
+```
+
+说明：
+
+- 项目默认优先使用本机 Chromium 渲染，不走 Remotion 的浏览器下载逻辑
+- 当前脚本会按这个顺序找浏览器：
+  - Linux/macOS:
+    - `REMOTION_BROWSER_EXECUTABLE`
+    - `/snap/bin/chromium`
+    - `/usr/bin/chromium-browser`
+    - `/usr/bin/chromium`
+  - Windows:
+    - `REMOTION_BROWSER_EXECUTABLE`
+    - `CHROME_PATH`
+    - `CHROMIUM_PATH`
+    - 常见的 Chrome / Chromium / Edge 安装路径
+
 额外前提：
 
 - 本地需要 `ffmpeg` 和 `ffprobe`
-- `install.sh` 会安装 Node 依赖、创建 `.venv`、安装 `edge-tts` 和 `faster-whisper`
+- `install.sh` / `scripts/install.ps1` 会安装 Node 依赖、创建 `.venv`、安装 `edge-tts` 和 `faster-whisper`
 - `speech:generate` 默认使用 `edge-tts` + `faster-whisper`
 - Whisper 默认模型是 `small`，脚本支持通过 `--model` 覆盖
 - 如果 `install.sh` 提示 `.venv/bin/pip` 不存在，先安装系统包：
@@ -190,7 +350,7 @@ debug: {
 
 ## 建议的继续迭代方向
 
-1. 给切分规则增加按停顿时长切分、按句长上限切分等策略
-2. 给生成脚本补更强的字幕文本与 Whisper 结果对齐策略
+1. 给生成脚本补更强的字幕文本与 Whisper 结果对齐策略
+2. 增加按句长上限和停顿优先级的更细粒度控制
 3. 增加更多位移模式，同时保持“固定容器先确定尺寸再整体运动”的规则
 4. 为字体、描边、阴影做纯文字风格的可配置化，而不是恢复卡片

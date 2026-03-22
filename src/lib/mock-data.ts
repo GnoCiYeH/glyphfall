@@ -22,7 +22,7 @@ export const demoSceneProps: SubtitleFeedSceneProps & {durationInFrames: number}
   tailHoldFrames,
   debug: {
     showContainerBounds: true,
-    showCaptionBounds: false,
+    showCaptionBounds: true,
   },
   captions: [
     {id: 'c1', text: '先让第一条字幕站住画面中心', layoutKey: 'ccw'},

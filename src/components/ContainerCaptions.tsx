@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {resolveContainerItems, resolveContainerVisualState} from '../lib/container-layout';
-import {CaptionVisualConfig, ContainerEvent} from '../lib/types';
+import {CaptionToken, CaptionVisualConfig, ContainerEvent} from '../lib/types';
 
 type ContainerCaptionsProps = {
   events: ContainerEvent[];
@@ -13,6 +13,8 @@ type ContainerCaptionsProps = {
 const cardStyle = (
   visuals: CaptionVisualConfig,
   fontSize: number,
+  fontFamily: string,
+  fontWeight: number,
   lineHeight: number,
   rotation: number,
 ): React.CSSProperties => ({
@@ -26,8 +28,8 @@ const cardStyle = (
   color: '#f8fafc',
   fontSize,
   lineHeight: `${lineHeight}px`,
-  fontWeight: visuals.fontWeight,
-  fontFamily: visuals.fontFamily,
+  fontWeight,
+  fontFamily,
   letterSpacing: `${visuals.activeLetterSpacing}px`,
   backgroundColor: 'transparent',
   border: 'none',
@@ -65,55 +67,102 @@ export const ContainerCaptions: React.FC<ContainerCaptionsProps> = ({
             top: visualState.top,
             width: visualState.width,
             height: visualState.height,
-            transformOrigin: visualState.transformOrigin,
-            transform: `translateY(${visualState.translateY}px) rotate(${visualState.rotation}deg)`,
+            transform: `translate(${visualState.alignTranslateX}px, ${visualState.alignTranslateY}px)`,
           }}
         >
-          {showContainerBounds ? (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              transformOrigin: visualState.modeTransformOrigin,
+              transform: `translateY(${visualState.modeTranslateY}px) rotate(${visualState.rotation}deg)`,
+            }}
+          >
             <div
               style={{
                 position: 'absolute',
                 inset: 0,
-                backgroundColor: 'rgba(34, 197, 94, 0.28)',
-                border: '2px solid rgba(34, 197, 94, 0.8)',
-                boxSizing: 'border-box',
-                pointerEvents: 'none',
+                transformOrigin: visualState.scaleTransformOrigin,
+                transform: `scale(${visualState.scale})`,
               }}
-            />
-          ) : null}
-          {items.map((item) => (
-            <div key={item.id} style={{position: 'absolute', left: item.x, top: item.y}}>
-              <div
-                style={{
-                  ...cardStyle(visuals, item.fontSize, item.lineHeight, item.rotation),
-                  width: item.width,
-                  minHeight: item.height,
-                  outline: showCaptionBounds ? '2px solid rgba(239, 68, 68, 0.95)' : 'none',
-                  outlineOffset: 0,
-                }}
-              >
-                {item.lines.map((line, index) => (
-                  <div key={`${item.id}-${index}`}>{line}</div>
-                ))}
-              </div>
+            >
+              {showContainerBounds ? (
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundColor: 'rgba(34, 197, 94, 0.28)',
+                    border: '2px solid rgba(34, 197, 94, 0.8)',
+                    boxSizing: 'border-box',
+                    pointerEvents: 'none',
+                  }}
+                />
+              ) : null}
+              {items.map((item) => (
+                <div key={item.id} style={{position: 'absolute', left: item.x, top: item.y}}>
+                  <div
+                    style={{
+                      ...cardStyle(
+                        visuals,
+                        item.fontSize,
+                        item.fontFamily,
+                        item.fontWeight,
+                        item.lineHeight,
+                        item.rotation,
+                      ),
+                      width: item.width,
+                      minHeight: item.height,
+                      outline: showCaptionBounds ? '2px solid rgba(239, 68, 68, 0.95)' : 'none',
+                      outlineOffset: 0,
+                    }}
+                  >
+                    {item.tokens?.length ? (
+                      <div>
+                        {item.tokens.map((token: CaptionToken, index) => (
+                          <span key={`${item.id}-${index}`} style={{color: token.color ?? '#f8fafc'}}>
+                            {token.text}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      item.lines.map((line, index) => <div key={`${item.id}-${index}`}>{line}</div>)
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       ) : (
         items.map((item) => (
           <div key={item.id} style={{position: 'absolute', left: item.x, top: item.y}}>
             <div
               style={{
-                ...cardStyle(visuals, item.fontSize, item.lineHeight, item.rotation),
+                ...cardStyle(
+                  visuals,
+                  item.fontSize,
+                  item.fontFamily,
+                  item.fontWeight,
+                  item.lineHeight,
+                  item.rotation,
+                ),
                 width: item.width,
                 minHeight: item.height,
                 outline: showCaptionBounds ? '2px solid rgba(239, 68, 68, 0.95)' : 'none',
                 outlineOffset: 0,
               }}
             >
-              {item.lines.map((line, index) => (
-                <div key={`${item.id}-${index}`}>{line}</div>
-              ))}
+              {item.tokens?.length ? (
+                <div>
+                  {item.tokens.map((token: CaptionToken, index) => (
+                    <span key={`${item.id}-${index}`} style={{color: token.color ?? '#f8fafc'}}>
+                      {token.text}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                item.lines.map((line, index) => <div key={`${item.id}-${index}`}>{line}</div>)
+              )}
             </div>
           </div>
         ))

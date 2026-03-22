@@ -4,6 +4,15 @@ export type RawCaption = {
   id: string;
   text: string;
   layoutKey: string;
+  fontSize?: number;
+  fontFamily?: string;
+  fontWeight?: number;
+  tokens?: CaptionToken[];
+};
+
+export type CaptionToken = {
+  text: string;
+  color?: string;
 };
 
 export type TimedWord = {
@@ -18,6 +27,10 @@ export type TimedSegment = {
   startMs: number;
   endMs: number;
   layoutKey?: string;
+  fontSize?: number;
+  fontFamily?: string;
+  fontWeight?: number;
+  tokens?: CaptionToken[];
 };
 
 export type SpeechChunkingConfig = {
@@ -25,6 +38,9 @@ export type SpeechChunkingConfig = {
   breakOnPunctuation: boolean;
   punctuationChars: string[];
   mergeShortTail: boolean;
+  pauseThresholdMs: number;
+  breakOnPause: boolean;
+  minCharsPerCaption: number;
 };
 
 export type SpeechSceneSource = {
@@ -61,11 +77,14 @@ export type CaptionLayoutConfig = {
   enterDurationFrames: number;
   containerTransitionFrames: number;
   translateDistancePx?: number;
+  scaleFactor?: number;
 };
 
 export type CaptionVisualConfig = {
   fontFamily: string;
+  fontUrl?: string;
   fontWeight: number;
+  autoFitFontSize: boolean;
   maxFontSize: number;
   minFontSize: number;
   lineHeightRatio: number;
@@ -80,6 +99,8 @@ export type CaptionVisualConfig = {
 export type MeasuredCaption = NormalizedCaption & {
   lines: string[];
   fontSize: number;
+  fontFamily: string;
+  fontWeight: number;
   lineHeight: number;
   width: number;
   height: number;
@@ -89,8 +110,11 @@ export type CaptionItemState = {
   id: string;
   text: string;
   layoutKey: string;
+  tokens?: CaptionToken[];
   lines: string[];
   fontSize: number;
+  fontFamily: string;
+  fontWeight: number;
   lineHeight: number;
   width: number;
   height: number;
@@ -114,6 +138,10 @@ export type ContainerEvent = {
   transitionFrames: number;
   mode: LayoutMode;
   translateDistancePx?: number;
+  scaleFactor?: number;
+  scaleTransformOrigin: string;
+  alignTranslateX: number;
+  alignTranslateY: number;
   fromBox: BoundingBox;
   fromItems: CaptionItemState[];
   toItems: CaptionItemState[];

@@ -6,35 +6,84 @@
   "volume": "+0%",
   "layoutSequence": ["ccw", "cw", "up"],
   "chunking": {
-    "maxCharsPerCaption": 12,
+    "maxCharsPerCaption": 14,
+    "minCharsPerCaption": 4,
     "breakOnPunctuation": true,
+    "breakOnPause": true,
+    "pauseThresholdMs": 320,
     "mergeShortTail": true
   },
   "captions": [
     {
       "id": "c1",
-      "text": "先让第一条字幕站住画面中心",
-      "layoutKey": "ccw"
+      "text": "短句先看效果",
+      "layoutKey": "ccw",
+      "fontSize": 98,
+      "tokens": [
+        {"text": "短句", "color": "#f97316"},
+        {"text": "先看", "color": "#ffffff"},
+        {"text": "效果", "color": "#38bdf8"}
+      ]
     },
     {
       "id": "c2",
-      "text": "第二条一出来 第一条就沉进容器",
-      "layoutKey": "cw"
+      "text": "这一条稍微长一点，用来观察大字号和缩放一起发生时的效果",
+      "layoutKey": "cw",
+      "fontSize": 86,
+      "tokens": [
+        {"text": "这一条", "color": "#ffffff"},
+        {"text": "稍微长一点", "color": "#facc15"},
+        {"text": "，用来观察", "color": "#ffffff"},
+        {"text": "大字号", "color": "#4ade80"},
+        {"text": "和缩放一起发生时的效果", "color": "#ffffff"}
+      ]
     },
     {
       "id": "c3",
-      "text": "容器保持累计布局继续整体变化",
-      "layoutKey": "up"
+      "text": "中等句长可以看上移贴边是不是还稳定",
+      "layoutKey": "up",
+      "fontSize": 78
     },
     {
       "id": "c4",
-      "text": "旧字幕不会消失 只会自然溢出屏幕",
-      "layoutKey": "ccw"
+      "text": "再来一条极短句",
+      "layoutKey": "ccw",
+      "fontSize": 108,
+      "tokens": [
+        {"text": "再来", "color": "#ffffff"},
+        {"text": "一条", "color": "#f472b6"},
+        {"text": "极短句", "color": "#ffffff"}
+      ]
     },
     {
       "id": "c5",
-      "text": "这样就形成字幕瀑布流的增长感",
-      "layoutKey": "cw"
+      "text": "最后给一条很长很长的句子，专门看自动缩字、词级颜色以及容器累计之后整体观感会不会变乱",
+      "layoutKey": "cw",
+      "fontSize": 92,
+      "tokens": [
+        {"text": "最后给一条", "color": "#ffffff"},
+        {"text": "很长很长的句子", "color": "#fb7185"},
+        {"text": "，专门看", "color": "#ffffff"},
+        {"text": "自动缩字", "color": "#a3e635"},
+        {"text": "、词级颜色", "color": "#facc15"},
+        {"text": "以及容器累计之后整体观感会不会变乱", "color": "#ffffff"}
+      ]
+    },
+    {
+      "id": "c6",
+      "text": "再补一个长度适中的尾句收尾",
+      "layoutKey": "up",
+      "fontSize": 84
+    },
+    {
+      "id": "c7",
+      "text": "测试结束",
+      "layoutKey": "ccw",
+      "fontSize": 112,
+      "tokens": [
+        {"text": "测试", "color": "#ffffff"},
+        {"text": "结束", "color": "#facc15"}
+      ]
     }
   ]
 }

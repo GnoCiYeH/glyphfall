@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
-import {CaptionLayoutConfig, MeasuredCaption, CaptionVisualConfig} from '../lib/types';
+import {CaptionLayoutConfig, CaptionToken, MeasuredCaption, CaptionVisualConfig} from '../lib/types';
 
 type ActiveCaptionProps = {
   caption: MeasuredCaption | undefined;
@@ -12,6 +12,8 @@ type ActiveCaptionProps = {
 const captionCardStyle = (
   visuals: CaptionVisualConfig,
   fontSize: number,
+  fontFamily: string,
+  fontWeight: number,
   lineHeight: number,
   rotation: number,
   scale: number,
@@ -26,8 +28,8 @@ const captionCardStyle = (
   color: '#f8fafc',
   fontSize,
   lineHeight: `${lineHeight}px`,
-  fontWeight: visuals.fontWeight,
-  fontFamily: visuals.fontFamily,
+  fontWeight,
+  fontFamily,
   letterSpacing: `${visuals.activeLetterSpacing}px`,
   backgroundColor: 'transparent',
   border: 'none',
@@ -71,16 +73,32 @@ export const ActiveCaption: React.FC<ActiveCaptionProps> = ({
       <div style={{position: 'absolute', left, top}}>
         <div
           style={{
-            ...captionCardStyle(visuals, caption.fontSize, caption.lineHeight, 0, scale),
+            ...captionCardStyle(
+              visuals,
+              caption.fontSize,
+              caption.fontFamily,
+              caption.fontWeight,
+              caption.lineHeight,
+              0,
+              scale,
+            ),
             width: caption.width,
             minHeight: caption.height,
             outline: showCaptionBounds ? '2px solid rgba(239, 68, 68, 0.95)' : 'none',
             outlineOffset: 0,
           }}
         >
-          {caption.lines.map((line, index) => (
-            <div key={`${caption.id}-${index}`}>{line}</div>
-          ))}
+          {caption.tokens?.length ? (
+            <div>
+              {caption.tokens.map((token: CaptionToken, index) => (
+                <span key={`${caption.id}-${index}`} style={{color: token.color ?? '#f8fafc'}}>
+                  {token.text}
+                </span>
+              ))}
+            </div>
+          ) : (
+            caption.lines.map((line, index) => <div key={`${caption.id}-${index}`}>{line}</div>)
+          )}
         </div>
       </div>
     </AbsoluteFill>

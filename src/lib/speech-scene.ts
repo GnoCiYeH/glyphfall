@@ -32,6 +32,10 @@ export const resolveSpeechScene = (speech?: SpeechSceneSource): ResolvedSceneInp
     id: segment.id,
     text: segment.text,
     layoutKey: segment.layoutKey ?? layoutSequence[index % layoutSequence.length],
+    fontSize: segment.fontSize,
+    fontFamily: segment.fontFamily,
+    fontWeight: segment.fontWeight,
+    tokens: segment.tokens,
   }));
 
   const timings: CaptionTimingInput[] = segments.map((segment) => ({

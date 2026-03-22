@@ -91,6 +91,48 @@ const translateItems = (items: CaptionItemState[], deltaX: number, deltaY: numbe
   }));
 };
 
+const scaleItemsAroundAnchor = (
+  items: CaptionItemState[],
+  originX: number,
+  originY: number,
+  scaleFactor: number,
+) => {
+  if (scaleFactor === 1) {
+    return items.map(cloneItem);
+  }
+
+  return items.map((item) => {
+    const scaledX = originX + (item.x - originX) * scaleFactor;
+    const scaledY = originY + (item.y - originY) * scaleFactor;
+
+    return {
+      ...cloneItem(item),
+      x: scaledX,
+      y: scaledY,
+      width: item.width * scaleFactor,
+      height: item.height * scaleFactor,
+      fontSize: item.fontSize * scaleFactor,
+      lineHeight: item.lineHeight * scaleFactor,
+    };
+  });
+};
+
+const getScaleAnchor = (bbox: BoundingBox, mode: LayoutMode) => {
+  if (mode === 'rotate_ccw_90') {
+    return {
+      originX: bbox.right,
+      originY: bbox.bottom,
+      transformOrigin: '100% 100%',
+    };
+  }
+
+  return {
+    originX: bbox.left,
+    originY: bbox.bottom,
+    transformOrigin: '0% 100%',
+  };
+};
+
 const applyMode = (
   items: CaptionItemState[],
   config: CaptionLayoutConfig,
@@ -106,6 +148,51 @@ const applyMode = (
   }
 
   return translateItems(items, 0, -(translateDistancePx ?? bbox.height * 0.7));
+};
+
+const getNextCaptionBox = (
+  activeAnchorX: number,
+  activeAnchorY: number,
+  nextCaption: MeasuredCaption,
+): BoundingBox => {
+  const left = activeAnchorX - nextCaption.width / 2;
+  const top = activeAnchorY - nextCaption.height / 2;
+  const right = left + nextCaption.width;
+  const bottom = top + nextCaption.height;
+
+  return {
+    left,
+    top,
+    right,
+    bottom,
+    width: nextCaption.width,
+    height: nextCaption.height,
+  };
+};
+
+const getAlignmentOffset = (
+  containerBox: BoundingBox,
+  nextCaptionBox: BoundingBox,
+  mode: LayoutMode,
+) => {
+  if (mode === 'rotate_ccw_90') {
+    return {
+      x: nextCaptionBox.left - containerBox.right,
+      y: nextCaptionBox.bottom - containerBox.bottom,
+    };
+  }
+
+  if (mode === 'translate_up') {
+    return {
+      x: nextCaptionBox.left - containerBox.left,
+      y: nextCaptionBox.top - containerBox.bottom,
+    };
+  }
+
+  return {
+    x: nextCaptionBox.right - containerBox.left,
+    y: nextCaptionBox.bottom - containerBox.bottom,
+  };
 };
 
 const interpolateNumber = (from: number, to: number, progress: number) => from + (to - from) * progress;
@@ -161,8 +248,11 @@ export const buildContainerEvents = (
       id: enteringCaption.id,
       text: enteringCaption.text,
       layoutKey: enteringCaption.layoutKey,
+      tokens: enteringCaption.tokens,
       lines: enteringCaption.lines,
       fontSize: enteringCaption.fontSize,
+      fontFamily: enteringCaption.fontFamily,
+      fontWeight: enteringCaption.fontWeight,
       lineHeight: enteringCaption.lineHeight,
       width: enteringCaption.width,
       height: enteringCaption.height,
@@ -172,12 +262,23 @@ export const buildContainerEvents = (
     };
     const fromItems = [...settledItems.map(cloneItem), enteringItem];
     const bbox = getBoundingBox(fromItems);
-    const nextCaptionTop = activeAnchorY - nextCaption.height / 2;
+    const nextCaptionBox = getNextCaptionBox(activeAnchorX, activeAnchorY, nextCaption);
+    const scaleFactor = config.scaleFactor ?? 1;
+    const scaleAnchor = getScaleAnchor(bbox, config.mode);
+    const scaledItems = scaleItemsAroundAnchor(
+      fromItems,
+      scaleAnchor.originX,
+      scaleAnchor.originY,
+      scaleFactor,
+    );
     const translateDistancePx =
       config.mode === 'translate_up'
-        ? config.translateDistancePx ?? Math.max(0, bbox.bottom - nextCaptionTop)
+        ? config.translateDistancePx ?? Math.max(0, bbox.bottom - nextCaptionBox.top)
         : config.translateDistancePx;
-    const toItems = applyMode(fromItems, config, bbox, translateDistancePx);
+    const transformedItems = applyMode(scaledItems, config, bbox, translateDistancePx);
+    const transformedBox = getBoundingBox(transformedItems);
+    const alignmentOffset = getAlignmentOffset(transformedBox, nextCaptionBox, config.mode);
+    const toItems = translateItems(transformedItems, alignmentOffset.x, alignmentOffset.y);
 
     events.push({
       key: enteringCaption.id,
@@ -185,6 +286,10 @@ export const buildContainerEvents = (
       transitionFrames: nextConfig.enterDurationFrames,
       mode: config.mode,
       translateDistancePx,
+      scaleFactor,
+      scaleTransformOrigin: scaleAnchor.transformOrigin,
+      alignTranslateX: alignmentOffset.x,
+      alignTranslateY: alignmentOffset.y,
       fromBox: bbox,
       fromItems,
       toItems,
@@ -221,7 +326,7 @@ export const resolveContainerItems = (events: ContainerEvent[], frame: number) =
   return settledItems;
 };
 
-const getTransformOrigin = (mode: LayoutMode) => {
+const getModeTransformOrigin = (mode: LayoutMode) => {
   if (mode === 'rotate_ccw_90') {
     return '0% 100%';
   }
@@ -257,11 +362,12 @@ export const resolveContainerVisualState = (events: ContainerEvent[], frame: num
     progress = 1;
   }
 
-  const {fromBox, mode, translateDistancePx} = activeEvent;
+  const {fromBox, mode, translateDistancePx, scaleFactor, scaleTransformOrigin} = activeEvent;
   const rotateTo =
     mode === 'rotate_ccw_90' ? -90 : mode === 'rotate_cw_90' ? 90 : 0;
   const translateYTo =
     mode === 'translate_up' ? -(translateDistancePx ?? fromBox.height * 0.7) : 0;
+  const scaleTo = scaleFactor ?? 1;
 
   return {
     event: activeEvent,
@@ -271,7 +377,11 @@ export const resolveContainerVisualState = (events: ContainerEvent[], frame: num
     width: fromBox.width,
     height: fromBox.height,
     rotation: rotateTo * progress,
-    translateY: translateYTo * progress,
-    transformOrigin: getTransformOrigin(mode),
+    modeTranslateY: translateYTo * progress,
+    scale: 1 + (scaleTo - 1) * progress,
+    alignTranslateX: activeEvent.alignTranslateX * progress,
+    alignTranslateY: activeEvent.alignTranslateY * progress,
+    modeTransformOrigin: getModeTransformOrigin(mode),
+    scaleTransformOrigin,
   };
 };

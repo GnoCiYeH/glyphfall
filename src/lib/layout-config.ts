@@ -5,25 +5,29 @@ export const defaultLayoutMap: Record<string, CaptionLayoutConfig> = {
     mode: 'rotate_ccw_90',
     enterDurationFrames: 18,
     containerTransitionFrames: 14,
+    scaleFactor: 1.08,
   },
   cw: {
     mode: 'rotate_cw_90',
     enterDurationFrames: 18,
     containerTransitionFrames: 14,
+    scaleFactor: 0.92,
   },
   up: {
     mode: 'translate_up',
     enterDurationFrames: 18,
     containerTransitionFrames: 12,
+    scaleFactor: 1.04,
   },
 };
 
 export const defaultVisuals: CaptionVisualConfig = {
   fontFamily:
-    '"Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif',
+    '"WenQuanYi Micro Hei", "Noto Sans CJK SC", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SimHei", sans-serif',
   fontWeight: 800,
-  maxFontSize: 72,
-  minFontSize: 40,
+  autoFitFontSize: true,
+  maxFontSize: 104,
+  minFontSize: 56,
   lineHeightRatio: 1.16,
   maxTextWidth: 760,
   paddingX: 0,

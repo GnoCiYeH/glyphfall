@@ -5,12 +5,23 @@ export const defaultChunkingConfig: SpeechChunkingConfig = {
   breakOnPunctuation: true,
   punctuationChars: ['，', '。', '！', '？', ',', '.', '!', '?', ';', '；', ':', '：'],
   mergeShortTail: true,
+  pauseThresholdMs: 360,
+  breakOnPause: true,
+  minCharsPerCaption: 4,
 };
 
 const getTextLength = (text: string) => Array.from(text).length;
 
 const endsWithPunctuation = (text: string, config: SpeechChunkingConfig) => {
   return config.punctuationChars.some((character) => text.endsWith(character));
+};
+
+const getPauseDuration = (previousWord: TimedWord | undefined, nextWord: TimedWord) => {
+  if (!previousWord) {
+    return 0;
+  }
+
+  return Math.max(0, nextWord.startMs - previousWord.endMs);
 };
 
 export const chunkWordsToSegments = (
@@ -28,6 +39,7 @@ export const chunkWordsToSegments = (
 
   const segments: TimedSegment[] = [];
   let currentWords: TimedWord[] = [];
+  let previousWord: TimedWord | undefined;
 
   const flush = () => {
     if (currentWords.length === 0) {
@@ -45,14 +57,27 @@ export const chunkWordsToSegments = (
   };
 
   for (const word of words) {
+    const pauseDuration = getPauseDuration(previousWord, word);
     const nextWords = [...currentWords, word];
     const nextText = nextWords.map((item) => item.text).join('');
+    const currentText = currentWords.map((item) => item.text).join('');
+    const reachedMinLength = getTextLength(currentText) >= config.minCharsPerCaption;
+
+    if (
+      currentWords.length > 0 &&
+      config.breakOnPause &&
+      pauseDuration >= config.pauseThresholdMs &&
+      reachedMinLength
+    ) {
+      flush();
+    }
 
     if (currentWords.length > 0 && getTextLength(nextText) > config.maxCharsPerCaption) {
       flush();
     }
 
     currentWords.push(word);
+    previousWord = word;
 
     if (config.breakOnPunctuation && endsWithPunctuation(word.text, config)) {
       flush();

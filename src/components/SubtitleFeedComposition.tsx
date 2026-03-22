@@ -24,15 +24,30 @@ export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props)
     props.visuals.activeAnchorY,
   );
   const activeConfig = activeCaption ? props.layoutMap[activeCaption.layoutKey] : undefined;
+  const resolvedFontUrl = props.visuals.fontUrl ? staticFile(props.visuals.fontUrl) : null;
+  const fontFaceCss = resolvedFontUrl
+    ? `
+@font-face {
+  font-family: "GlyphFallCustomFont";
+  src: url("${resolvedFontUrl}");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}`
+    : '';
+  const rootFontFamily = resolvedFontUrl
+    ? `"GlyphFallCustomFont", ${props.visuals.fontFamily}`
+    : props.visuals.fontFamily;
 
   return (
     <AbsoluteFill
       style={{
         background: props.backgroundColor ?? '#020617',
         overflow: 'hidden',
-        fontFamily: props.visuals.fontFamily,
+        fontFamily: rootFontFamily,
       }}
     >
+      {fontFaceCss ? <style>{fontFaceCss}</style> : null}
       {resolvedSpeech?.audioSrc ? <Audio src={staticFile(resolvedSpeech.audioSrc)} /> : null}
       <Sequence from={0}>
         <ContainerCaptions
