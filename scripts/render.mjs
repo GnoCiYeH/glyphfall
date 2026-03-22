@@ -28,6 +28,27 @@ const defaultVisuals = {
   activeLetterSpacing: 2,
 };
 
+const defaultEffects = {
+  captionSettle: {
+    enabled: false,
+    preset: 'outline-pop',
+    durationFrames: 8,
+    intensity: 0.35,
+    color: '#f8fafc',
+  },
+  glyphAssemble: {
+    enabled: false,
+    preset: 'content-slices',
+    durationFrames: 12,
+    rows: 3,
+    cols: 5,
+    scatter: 18,
+    rotation: 18,
+    textRevealStart: 0.45,
+    textRevealEnd: 0.85,
+  },
+};
+
 const defaultLayoutMap = {
   ccw: {
     mode: 'rotate_ccw_90',
@@ -144,6 +165,17 @@ const buildRenderProps = (projectConfig, generatedSpeech, audioDataUrl) => {
     visuals: {
       ...defaultVisuals,
       ...(projectConfig.visuals ?? {}),
+    },
+    effects: {
+      ...defaultEffects,
+      captionSettle: {
+        ...defaultEffects.captionSettle,
+        ...(projectConfig.effects?.captionSettle ?? {}),
+      },
+      glyphAssemble: {
+        ...defaultEffects.glyphAssemble,
+        ...(projectConfig.effects?.glyphAssemble ?? {}),
+      },
     },
     durationInFrames: getSpeechDurationInFrames(generatedSpeech, fps, tailHoldFrames),
   };

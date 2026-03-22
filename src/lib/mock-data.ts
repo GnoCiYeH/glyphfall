@@ -3,12 +3,13 @@ import deployFridayConfigJson from '../../examples/deploy-friday.json';
 import rubberDuckConfigJson from '../../examples/rubber-duck.json';
 import standupRoastConfigJson from '../../examples/standup-roast.json';
 import techLaunchConfigJson from '../../examples/tech-launch.json';
-import {defaultLayoutMap, defaultVisuals} from './layout-config';
+import {defaultEffects, defaultLayoutMap, defaultVisuals} from './layout-config';
 import {getDurationInFrames} from './timeline';
 import {
   CaptionLayoutConfig,
   CaptionLayoutConfigInput,
   CaptionVisualConfig,
+  EffectsConfig,
   GlyphFallSceneProps,
   SubtitleProjectConfig,
 } from './types';
@@ -136,6 +137,17 @@ const buildDemoSceneProps = (
     ...defaultVisuals,
     ...(subtitlesConfig.visuals ?? {}),
   };
+  const effects: EffectsConfig = {
+    ...defaultEffects,
+    captionSettle: {
+      ...defaultEffects.captionSettle,
+      ...(subtitlesConfig.effects?.captionSettle ?? {}),
+    },
+    glyphAssemble: {
+      ...defaultEffects.glyphAssemble,
+      ...(subtitlesConfig.effects?.glyphAssemble ?? {}),
+    },
+  };
 
   const fps = subtitlesConfig.fps ?? 30;
   const width = subtitlesConfig.width ?? 1080;
@@ -160,6 +172,7 @@ const buildDemoSceneProps = (
     },
     layoutMap,
     visuals,
+    effects,
     durationInFrames: getDurationInFrames(fallbackTimings, fps, tailHoldFrames),
   };
 };

@@ -1,4 +1,4 @@
-import {CaptionLayoutConfig, CaptionVisualConfig} from './types';
+import {CaptionLayoutConfig, CaptionVisualConfig, EffectsConfig} from './types';
 import {defaultEnterEasing} from './animation';
 
 export const defaultLayoutMap: Record<string, CaptionLayoutConfig> = {
@@ -40,4 +40,25 @@ export const defaultVisuals: CaptionVisualConfig = {
   borderRadius: 0,
   activeAnchorY: 960,
   activeLetterSpacing: 2,
+};
+
+export const defaultEffects: EffectsConfig = {
+  captionSettle: {
+    enabled: false,
+    preset: 'outline-pop',
+    durationFrames: 14,
+    intensity: 0.35,
+    color: '#f8fafc',
+  },
+  glyphAssemble: {
+    enabled: false,
+    preset: 'content-slices',
+    durationFrames: 20,
+    rows: 3,
+    cols: 5,
+    scatter: 24,
+    rotation: 24,
+    textRevealStart: 0.62,
+    textRevealEnd: 0.96,
+  },
 };

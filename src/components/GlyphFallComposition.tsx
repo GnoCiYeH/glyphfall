@@ -57,6 +57,7 @@ export const GlyphFallComposition: React.FC<GlyphFallSceneProps> = (props) => {
           caption={activeCaption}
           config={activeConfig}
           visuals={props.visuals}
+          effects={props.effects}
           showCaptionBounds={props.debug?.showCaptionBounds}
         />
       </Sequence>

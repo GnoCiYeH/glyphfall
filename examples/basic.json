@@ -24,6 +24,26 @@
     "activeAnchorY": 960,
     "activeLetterSpacing": 2
   },
+  "effects": {
+    "captionSettle": {
+      "enabled": false,
+      "preset": "outline-pop",
+      "durationFrames": 12,
+      "intensity": 0.22,
+      "color": "#f8fafc"
+    },
+    "glyphAssemble": {
+      "enabled": true,
+      "preset": "content-slices",
+      "durationFrames": 20,
+      "rows": 3,
+      "cols": 5,
+      "scatter": 24,
+      "rotation": 22,
+      "textRevealStart": 0.62,
+      "textRevealEnd": 0.96
+    }
+  },
   "layoutMap": {
     "ccw": {
       "mode": "rotate_ccw_90",
