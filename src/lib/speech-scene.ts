@@ -32,6 +32,7 @@ export const resolveSpeechScene = (speech?: SpeechSceneSource): ResolvedSceneInp
     id: segment.id,
     text: segment.text,
     layoutKey: segment.layoutKey ?? layoutSequence[index % layoutSequence.length],
+    utteranceId: segment.utteranceId,
     fontSize: segment.fontSize,
     fontFamily: segment.fontFamily,
     fontWeight: segment.fontWeight,

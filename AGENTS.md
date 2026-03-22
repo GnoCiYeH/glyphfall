@@ -30,6 +30,7 @@
 - 当前推荐入口是 `src/data/subtitles.json`
   - 人工维护字幕文本、画面参数、调试开关、视觉配置、位移配置、语音参数
   - 语音和时间由脚本生成到 `src/data/generated-speech.json`
+  - 如果多条字幕属于同一句完整话术，优先使用顶层 `utterances` 和字幕上的 `utteranceId` 保留原始断句
 - 项目依赖安装优先走 `./install.sh`
   - 负责 `npm install`
   - 负责创建 `.venv`
@@ -38,6 +39,8 @@
 - `npm run render` 会在需要时自动补跑语音生成链路
   - 目标是避免手动重复执行 `speech:generate`
   - 仅当字幕输入文件 hash 变化、或产物缺失时才自动重跑
+- 新字幕出现和容器位移必须共享同一套时长与 easing
+  - 当前统一由 `layoutMap[*].enterDurationFrames` 和可选 `enterEasing` 控制
 
 ## 后续迭代约定
 

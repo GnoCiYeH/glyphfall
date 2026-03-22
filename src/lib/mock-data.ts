@@ -26,6 +26,7 @@ const mergeLayoutConfig = (
     enterDurationFrames: override.enterDurationFrames ?? base.enterDurationFrames,
     containerTransitionFrames:
       override.containerTransitionFrames ?? base.containerTransitionFrames,
+    enterEasing: override.enterEasing ?? base.enterEasing,
     translateDistancePx: override.translateDistancePx ?? base.translateDistancePx,
     scaleFactor: override.scaleFactor ?? base.scaleFactor,
   };
@@ -44,6 +45,7 @@ const layoutMap = Object.entries(subtitlesConfig.layoutMap ?? {}).reduce<Record<
       mode: value.mode,
       enterDurationFrames: value.enterDurationFrames ?? 18,
       containerTransitionFrames: value.containerTransitionFrames ?? 14,
+      enterEasing: value.enterEasing,
       translateDistancePx: value.translateDistancePx,
       scaleFactor: value.scaleFactor,
     };

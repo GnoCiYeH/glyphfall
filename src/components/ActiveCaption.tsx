@@ -1,5 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {defaultEnterEasing} from '../lib/animation';
 import {CaptionLayoutConfig, CaptionToken, MeasuredCaption, CaptionVisualConfig} from '../lib/types';
 
 type ActiveCaptionProps = {
@@ -56,10 +57,11 @@ export const ActiveCaption: React.FC<ActiveCaptionProps> = ({
 
   const enterFrame = frame - caption.startFrame;
   const enterDuration = Math.max(1, config.enterDurationFrames);
+  const easing = config.enterEasing ?? [...defaultEnterEasing];
   const progress = interpolate(enterFrame, [0, enterDuration], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
-    easing: Easing.bezier(0.22, 1, 0.36, 1),
+    easing: Easing.bezier(...easing),
   });
   const scale = interpolate(progress, [0, 1], [0, 1], {
     extrapolateLeft: 'clamp',

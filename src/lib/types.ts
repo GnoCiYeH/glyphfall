@@ -4,10 +4,16 @@ export type RawCaption = {
   id: string;
   text: string;
   layoutKey: string;
+  utteranceId?: string;
   fontSize?: number;
   fontFamily?: string;
   fontWeight?: number;
   tokens?: CaptionToken[];
+};
+
+export type RawUtterance = {
+  id: string;
+  text: string;
 };
 
 export type CaptionToken = {
@@ -27,6 +33,7 @@ export type TimedSegment = {
   startMs: number;
   endMs: number;
   layoutKey?: string;
+  utteranceId?: string;
   fontSize?: number;
   fontFamily?: string;
   fontWeight?: number;
@@ -76,6 +83,7 @@ export type CaptionLayoutConfig = {
   mode: LayoutMode;
   enterDurationFrames: number;
   containerTransitionFrames: number;
+  enterEasing?: [number, number, number, number];
   translateDistancePx?: number;
   scaleFactor?: number;
 };
@@ -84,6 +92,7 @@ export type CaptionLayoutConfigInput = {
   mode: LayoutMode;
   enterDurationFrames?: number;
   containerTransitionFrames?: number;
+  enterEasing?: [number, number, number, number];
   translateDistancePx?: number;
   scaleFactor?: number;
 };
@@ -145,6 +154,7 @@ export type ContainerEvent = {
   triggerFrame: number;
   transitionFrames: number;
   mode: LayoutMode;
+  enterEasing?: [number, number, number, number];
   translateDistancePx?: number;
   scaleFactor?: number;
   scaleTransformOrigin: string;
@@ -189,6 +199,7 @@ export type SubtitleProjectConfig = {
   rate?: string;
   pitch?: string;
   volume?: string;
+  utterances?: RawUtterance[];
   captions: RawCaption[];
   layoutSequence?: string[];
   chunking?: Partial<SpeechChunkingConfig>;

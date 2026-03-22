@@ -1,30 +1,34 @@
 import {CaptionLayoutConfig, CaptionVisualConfig} from './types';
+import {defaultEnterEasing} from './animation';
 
 export const defaultLayoutMap: Record<string, CaptionLayoutConfig> = {
   ccw: {
     mode: 'rotate_ccw_90',
     enterDurationFrames: 18,
     containerTransitionFrames: 14,
+    enterEasing: [...defaultEnterEasing],
     scaleFactor: 1.08,
   },
   cw: {
     mode: 'rotate_cw_90',
     enterDurationFrames: 18,
     containerTransitionFrames: 14,
+    enterEasing: [...defaultEnterEasing],
     scaleFactor: 0.92,
   },
   up: {
     mode: 'translate_up',
     enterDurationFrames: 18,
     containerTransitionFrames: 12,
+    enterEasing: [...defaultEnterEasing],
     scaleFactor: 1.04,
   },
 };
 
 export const defaultVisuals: CaptionVisualConfig = {
-  fontUrl: 'fonts/LXGWWenKaiGBLite-Regular.ttf',
+  fontUrl: 'fonts/SmileySans-Oblique.otf',
   fontFamily:
-    '"WenQuanYi Micro Hei", "Noto Sans CJK SC", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "SimHei", sans-serif',
+    '"Smiley Sans", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif',
   fontWeight: 800,
   autoFitFontSize: true,
   maxFontSize: 104,

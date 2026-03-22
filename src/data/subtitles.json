@@ -9,8 +9,8 @@
     "showCaptionBounds": true
   },
   "visuals": {
-    "fontUrl": "fonts/LXGWWenKaiGBLite-Regular.ttf",
-    "fontFamily": "\"WenQuanYi Micro Hei\", \"Noto Sans CJK SC\", \"Source Han Sans SC\", \"Noto Sans SC\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", \"SimHei\", sans-serif",
+    "fontUrl": "fonts/SmileySans-Oblique.otf",
+    "fontFamily": "\"Smiley Sans\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
     "fontWeight": 800,
     "autoFitFontSize": true,
     "maxFontSize": 104,
@@ -57,76 +57,80 @@
     "pauseThresholdMs": 320,
     "mergeShortTail": true
   },
+  "utterances": [
+    {
+      "id": "u1",
+      "text": "hello 大家好，我是小派，现在为大家展示 glyphfall。"
+    },
+    {
+      "id": "u2",
+      "text": "以及教大家怎么样做这样的旋转瀑布。"
+    }
+  ],
   "captions": [
     {
       "id": "c1",
-      "text": "短句先看效果",
+      "text": "hello 大家好",
+      "utteranceId": "u1",
       "layoutKey": "ccw",
-      "fontSize": 98,
+      "fontSize": 96,
       "tokens": [
-        {"text": "短句", "color": "#f97316"},
-        {"text": "先看", "color": "#ffffff"},
-        {"text": "效果", "color": "#38bdf8"}
+        {"text": "hello ", "color": "#38bdf8"},
+        {"text": "大家好", "color": "#f472b6"}
       ]
     },
     {
       "id": "c2",
-      "text": "这一条稍微长一点，用来观察大字号和缩放一起发生时的效果",
+      "text": "我是小派",
+      "utteranceId": "u1",
       "layoutKey": "cw",
-      "fontSize": 86,
+      "fontSize": 102,
       "tokens": [
-        {"text": "这一条", "color": "#ffffff"},
-        {"text": "稍微长一点", "color": "#facc15"},
-        {"text": "，用来观察", "color": "#ffffff"},
-        {"text": "大字号", "color": "#4ade80"},
-        {"text": "和缩放一起发生时的效果", "color": "#ffffff"}
+        {"text": "我是", "color": "#ffffff"},
+        {"text": "小派", "color": "#fb7185"}
       ]
     },
     {
       "id": "c3",
-      "text": "中等句长可以看上移贴边是不是还稳定",
+      "text": "现在为大家展示 glyphfall",
+      "utteranceId": "u1",
       "layoutKey": "up",
-      "fontSize": 78
+      "fontSize": 82,
+      "tokens": [
+        {"text": "现在为大家展示 ", "color": "#ffffff"},
+        {"text": "glyphfall", "color": "#a3e635"}
+      ]
     },
     {
       "id": "c4",
-      "text": "再来一条极短句",
+      "text": "以及教大家",
+      "utteranceId": "u2",
       "layoutKey": "ccw",
-      "fontSize": 108,
+      "fontSize": 94,
       "tokens": [
-        {"text": "再来", "color": "#ffffff"},
-        {"text": "一条", "color": "#f472b6"},
-        {"text": "极短句", "color": "#ffffff"}
+        {"text": "以及教大家", "color": "#facc15"}
       ]
     },
     {
       "id": "c5",
-      "text": "最后给一条很长很长的句子，专门看自动缩字、词级颜色以及容器累计之后整体观感会不会变乱",
+      "text": "怎么样 做这样的",
+      "utteranceId": "u2",
       "layoutKey": "cw",
-      "fontSize": 92,
+      "fontSize": 88,
       "tokens": [
-        {"text": "最后给一条", "color": "#ffffff"},
-        {"text": "很长很长的句子", "color": "#fb7185"},
-        {"text": "，专门看", "color": "#ffffff"},
-        {"text": "自动缩字", "color": "#a3e635"},
-        {"text": "、词级颜色", "color": "#facc15"},
-        {"text": "以及容器累计之后整体观感会不会变乱", "color": "#ffffff"}
+        {"text": "怎么样 ", "color": "#ffffff"},
+        {"text": "做这样的", "color": "#4ade80"}
       ]
     },
     {
       "id": "c6",
-      "text": "再补一个长度适中的尾句收尾",
+      "text": "旋转瀑布",
+      "utteranceId": "u2",
       "layoutKey": "up",
-      "fontSize": 84
-    },
-    {
-      "id": "c7",
-      "text": "测试结束",
-      "layoutKey": "ccw",
-      "fontSize": 112,
+      "fontSize": 108,
       "tokens": [
-        {"text": "测试", "color": "#ffffff"},
-        {"text": "结束", "color": "#facc15"}
+        {"text": "旋转", "color": "#f97316"},
+        {"text": "瀑布", "color": "#38bdf8"}
       ]
     }
   ]
