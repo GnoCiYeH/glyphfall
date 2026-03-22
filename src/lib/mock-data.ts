@@ -1,4 +1,6 @@
 import {defaultLayoutMap, defaultVisuals} from './layout-config';
+import {generatedSpeechScene} from './generated-speech';
+import {getSpeechSceneDurationInFrames} from './speech-scene';
 import {getDurationInFrames} from './timeline';
 import {SubtitleFeedSceneProps} from './types';
 
@@ -18,6 +20,10 @@ export const demoSceneProps: SubtitleFeedSceneProps & {durationInFrames: number}
   height: 1920,
   backgroundColor: '#09090b',
   tailHoldFrames,
+  debug: {
+    showContainerBounds: true,
+    showCaptionBounds: false,
+  },
   captions: [
     {id: 'c1', text: '先让第一条字幕站住画面中心', layoutKey: 'ccw'},
     {id: 'c2', text: '第二条一出来 第一条就沉进容器', layoutKey: 'cw'},
@@ -26,7 +32,11 @@ export const demoSceneProps: SubtitleFeedSceneProps & {durationInFrames: number}
     {id: 'c5', text: '这样就形成字幕瀑布流的增长感', layoutKey: 'cw'},
   ],
   timings: [...timings],
+  speech: generatedSpeechScene,
   layoutMap: defaultLayoutMap,
   visuals: defaultVisuals,
-  durationInFrames: getDurationInFrames([...timings], fps, tailHoldFrames),
+  durationInFrames: Math.max(
+    getDurationInFrames([...timings], fps, tailHoldFrames),
+    getSpeechSceneDurationInFrames(generatedSpeechScene, fps, tailHoldFrames),
+  ),
 };

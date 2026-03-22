@@ -6,6 +6,8 @@ import {CaptionVisualConfig, ContainerEvent} from '../lib/types';
 type ContainerCaptionsProps = {
   events: ContainerEvent[];
   visuals: CaptionVisualConfig;
+  showContainerBounds?: boolean;
+  showCaptionBounds?: boolean;
 };
 
 const cardStyle = (
@@ -37,7 +39,12 @@ const cardStyle = (
   transformOrigin: 'top left',
 });
 
-export const ContainerCaptions: React.FC<ContainerCaptionsProps> = ({events, visuals}) => {
+export const ContainerCaptions: React.FC<ContainerCaptionsProps> = ({
+  events,
+  visuals,
+  showContainerBounds,
+  showCaptionBounds,
+}) => {
   const frame = useCurrentFrame();
   const visualState = resolveContainerVisualState(events, frame);
   const items = visualState
@@ -62,16 +69,18 @@ export const ContainerCaptions: React.FC<ContainerCaptionsProps> = ({events, vis
             transform: `translateY(${visualState.translateY}px) rotate(${visualState.rotation}deg)`,
           }}
         >
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundColor: 'rgba(34, 197, 94, 0.28)',
-              border: '2px solid rgba(34, 197, 94, 0.8)',
-              boxSizing: 'border-box',
-              pointerEvents: 'none',
-            }}
-          />
+          {showContainerBounds ? (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundColor: 'rgba(34, 197, 94, 0.28)',
+                border: '2px solid rgba(34, 197, 94, 0.8)',
+                boxSizing: 'border-box',
+                pointerEvents: 'none',
+              }}
+            />
+          ) : null}
           {items.map((item) => (
             <div key={item.id} style={{position: 'absolute', left: item.x, top: item.y}}>
               <div
@@ -79,6 +88,8 @@ export const ContainerCaptions: React.FC<ContainerCaptionsProps> = ({events, vis
                   ...cardStyle(visuals, item.fontSize, item.lineHeight, item.rotation),
                   width: item.width,
                   minHeight: item.height,
+                  outline: showCaptionBounds ? '2px solid rgba(239, 68, 68, 0.95)' : 'none',
+                  outlineOffset: 0,
                 }}
               >
                 {item.lines.map((line, index) => (
@@ -96,6 +107,8 @@ export const ContainerCaptions: React.FC<ContainerCaptionsProps> = ({events, vis
                 ...cardStyle(visuals, item.fontSize, item.lineHeight, item.rotation),
                 width: item.width,
                 minHeight: item.height,
+                outline: showCaptionBounds ? '2px solid rgba(239, 68, 68, 0.95)' : 'none',
+                outlineOffset: 0,
               }}
             >
               {item.lines.map((line, index) => (

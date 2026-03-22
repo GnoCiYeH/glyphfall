@@ -1,6 +1,7 @@
 import React from 'react';
-import {AbsoluteFill, Sequence, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {buildContainerEvents} from '../lib/container-layout';
+import {resolveSpeechScene} from '../lib/speech-scene';
 import {findActiveCaption, normalizeCaptionTimings} from '../lib/timeline';
 import {measureCaption} from '../lib/text-layout';
 import {SubtitleFeedSceneProps} from '../lib/types';
@@ -9,7 +10,10 @@ import {ContainerCaptions} from './ContainerCaptions';
 
 export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props) => {
   const frame = useCurrentFrame();
-  const normalizedCaptions = normalizeCaptionTimings(props.captions, props.timings, props.fps);
+  const resolvedSpeech = resolveSpeechScene(props.speech);
+  const captions = resolvedSpeech?.captions ?? props.captions ?? [];
+  const timings = resolvedSpeech?.timings ?? props.timings ?? [];
+  const normalizedCaptions = normalizeCaptionTimings(captions, timings, props.fps);
   const measuredCaptions = normalizedCaptions.map((caption) => measureCaption(caption, props.visuals));
   const activeCaption = findActiveCaption(measuredCaptions, frame);
   const activeAnchorX = props.width / 2;
@@ -29,11 +33,22 @@ export const SubtitleFeedComposition: React.FC<SubtitleFeedSceneProps> = (props)
         fontFamily: props.visuals.fontFamily,
       }}
     >
+      {resolvedSpeech?.audioSrc ? <Audio src={staticFile(resolvedSpeech.audioSrc)} /> : null}
       <Sequence from={0}>
-        <ContainerCaptions events={events} visuals={props.visuals} />
+        <ContainerCaptions
+          events={events}
+          visuals={props.visuals}
+          showContainerBounds={props.debug?.showContainerBounds}
+          showCaptionBounds={props.debug?.showCaptionBounds}
+        />
       </Sequence>
       <Sequence from={0}>
-        <ActiveCaption caption={activeCaption} config={activeConfig} visuals={props.visuals} />
+        <ActiveCaption
+          caption={activeCaption}
+          config={activeConfig}
+          visuals={props.visuals}
+          showCaptionBounds={props.debug?.showCaptionBounds}
+        />
       </Sequence>
     </AbsoluteFill>
   );

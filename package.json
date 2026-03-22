@@ -6,7 +6,8 @@
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "render": "remotion render src/index.ts SubtitleFeed out/subtitle-feed.mp4",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "speech:generate": "python3 scripts/generate_speech_assets.py"
   },
   "dependencies": {
     "react": "^18.3.1",

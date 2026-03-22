@@ -6,6 +6,35 @@ export type RawCaption = {
   layoutKey: string;
 };
 
+export type TimedWord = {
+  text: string;
+  startMs: number;
+  endMs: number;
+};
+
+export type TimedSegment = {
+  id: string;
+  text: string;
+  startMs: number;
+  endMs: number;
+  layoutKey?: string;
+};
+
+export type SpeechChunkingConfig = {
+  maxCharsPerCaption: number;
+  breakOnPunctuation: boolean;
+  punctuationChars: string[];
+  mergeShortTail: boolean;
+};
+
+export type SpeechSceneSource = {
+  audioSrc?: string;
+  words?: TimedWord[];
+  segments?: TimedSegment[];
+  layoutSequence?: string[];
+  chunking?: Partial<SpeechChunkingConfig>;
+};
+
 export type CaptionTimingInput =
   | {
       startFrame: number;
@@ -94,16 +123,27 @@ export type SubtitleFeedSceneProps = {
   fps: number;
   width: number;
   height: number;
-  captions: RawCaption[];
-  timings: CaptionTimingInput[];
+  captions?: RawCaption[];
+  timings?: CaptionTimingInput[];
+  speech?: SpeechSceneSource;
   layoutMap: Record<string, CaptionLayoutConfig>;
   visuals: CaptionVisualConfig;
   tailHoldFrames?: number;
   backgroundColor?: string;
+  debug?: {
+    showContainerBounds?: boolean;
+    showCaptionBounds?: boolean;
+  };
 };
 
 export type PreparedScene = {
   captions: MeasuredCaption[];
   events: ContainerEvent[];
   durationInFrames: number;
+};
+
+export type ResolvedSceneInput = {
+  captions: RawCaption[];
+  timings: CaptionTimingInput[];
+  audioSrc?: string;
 };

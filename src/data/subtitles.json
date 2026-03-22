@@ -1,0 +1,40 @@
+{
+  "audioSrc": "audio/narration.mp3",
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "+0%",
+  "pitch": "+0Hz",
+  "volume": "+0%",
+  "layoutSequence": ["ccw", "cw", "up"],
+  "chunking": {
+    "maxCharsPerCaption": 12,
+    "breakOnPunctuation": true,
+    "mergeShortTail": true
+  },
+  "captions": [
+    {
+      "id": "c1",
+      "text": "先让第一条字幕站住画面中心",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "c2",
+      "text": "第二条一出来 第一条就沉进容器",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "c3",
+      "text": "容器保持累计布局继续整体变化",
+      "layoutKey": "up"
+    },
+    {
+      "id": "c4",
+      "text": "旧字幕不会消失 只会自然溢出屏幕",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "c5",
+      "text": "这样就形成字幕瀑布流的增长感",
+      "layoutKey": "cw"
+    }
+  ]
+}

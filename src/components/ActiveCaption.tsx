@@ -6,6 +6,7 @@ type ActiveCaptionProps = {
   caption: MeasuredCaption | undefined;
   config: CaptionLayoutConfig | undefined;
   visuals: CaptionVisualConfig;
+  showCaptionBounds?: boolean;
 };
 
 const captionCardStyle = (
@@ -38,7 +39,12 @@ const captionCardStyle = (
   transformOrigin: 'center center',
 });
 
-export const ActiveCaption: React.FC<ActiveCaptionProps> = ({caption, config, visuals}) => {
+export const ActiveCaption: React.FC<ActiveCaptionProps> = ({
+  caption,
+  config,
+  visuals,
+  showCaptionBounds,
+}) => {
   const frame = useCurrentFrame();
   const {width} = useVideoConfig();
 
@@ -68,6 +74,8 @@ export const ActiveCaption: React.FC<ActiveCaptionProps> = ({caption, config, vi
             ...captionCardStyle(visuals, caption.fontSize, caption.lineHeight, 0, scale),
             width: caption.width,
             minHeight: caption.height,
+            outline: showCaptionBounds ? '2px solid rgba(239, 68, 68, 0.95)' : 'none',
+            outlineOffset: 0,
           }}
         >
           {caption.lines.map((line, index) => (
