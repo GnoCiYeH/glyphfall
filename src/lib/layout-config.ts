@@ -1,4 +1,4 @@
-import {CaptionLayoutConfig, CaptionVisualConfig, EffectsConfig} from './types';
+import {AudioMixConfig, CaptionLayoutConfig, CaptionVisualConfig, EffectsConfig} from './types';
 import {defaultEnterEasing} from './animation';
 
 export const defaultLayoutMap: Record<string, CaptionLayoutConfig> = {
@@ -60,5 +60,14 @@ export const defaultEffects: EffectsConfig = {
     rotation: 24,
     textRevealStart: 0.62,
     textRevealEnd: 0.96,
+  },
+};
+
+export const defaultAudioMix: AudioMixConfig = {
+  ducking: {
+    enabled: false,
+    volumeMultiplier: 0.4,
+    attackMs: 180,
+    releaseMs: 260,
   },
 };

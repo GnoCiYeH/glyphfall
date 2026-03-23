@@ -1,0 +1,263 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "tailHoldFrames": 54,
+  "backgroundColor": "#09090b",
+  "outputVideoName": "lyrics-demo",
+  "layoutSequence": [
+    "ccw",
+    "cw",
+    "up"
+  ],
+  "backgroundMusic": [
+    {
+      "src": "music/game-bgm.ogg",
+      "startMs": 0,
+      "volume": 0.28,
+      "fadeInMs": 900,
+      "fadeOutMs": 1400
+    }
+  ],
+  "audioMix": {
+    "ducking": {
+      "enabled": false,
+      "volumeMultiplier": 0.4,
+      "attackMs": 180,
+      "releaseMs": 260
+    }
+  },
+  "debug": {
+    "showContainerBounds": false,
+    "showCaptionBounds": false
+  },
+  "visuals": {
+    "fontUrl": "fonts/SmileySans-Oblique.otf",
+    "fontFamily": "\"Smiley Sans\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "fontWeight": 800,
+    "autoFitFontSize": true,
+    "maxFontSize": 104,
+    "minFontSize": 56,
+    "lineHeightRatio": 1.16,
+    "maxTextWidth": 760,
+    "paddingX": 0,
+    "paddingY": 0,
+    "borderRadius": 0,
+    "activeAnchorY": 960,
+    "activeLetterSpacing": 2
+  },
+  "effects": {
+    "captionSettle": {
+      "enabled": false,
+      "preset": "outline-pop",
+      "durationFrames": 12,
+      "intensity": 0.22,
+      "color": "#f8fafc"
+    },
+    "glyphAssemble": {
+      "enabled": false,
+      "preset": "content-slices",
+      "durationFrames": 20,
+      "rows": 3,
+      "cols": 5,
+      "scatter": 24,
+      "rotation": 22,
+      "textRevealStart": 0.62,
+      "textRevealEnd": 0.96
+    }
+  },
+  "layoutMap": {
+    "ccw": {
+      "mode": "rotate_ccw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 1.08
+    },
+    "cw": {
+      "mode": "rotate_cw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 0.92
+    },
+    "up": {
+      "mode": "translate_up",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 12,
+      "scaleFactor": 1.04
+    }
+  },
+  "utterances": [
+    {
+      "id": "lyric-utterance-1",
+      "text": "凌晨两点我还盯着 CI 的红灯"
+    },
+    {
+      "id": "lyric-utterance-2",
+      "text": "群里有人说这次应该只是缓存抖了一层"
+    },
+    {
+      "id": "lyric-utterance-3",
+      "text": "我把日志翻到底 它却回我一句 undefined"
+    },
+    {
+      "id": "lyric-utterance-4",
+      "text": "于是小黄鸭站上键盘 开始主持复盘晨会"
+    },
+    {
+      "id": "lyric-utterance-5",
+      "text": "第一条结论 不要在周五上线后改鉴权"
+    },
+    {
+      "id": "lyric-utterance-6",
+      "text": "第二条结论 不要把测试库地址写进生产"
+    },
+    {
+      "id": "lyric-utterance-7",
+      "text": "第三条结论 如果非要改 先让回滚脚本活着"
+    },
+    {
+      "id": "lyric-utterance-8",
+      "text": "监控终于从满屏告警 变成了一条温柔的绿线"
+    },
+    {
+      "id": "lyric-utterance-9",
+      "text": "实习生抬头问 哥 现在是不是算系统稳定了"
+    },
+    {
+      "id": "lyric-utterance-10",
+      "text": "老工程师喝了口冷咖啡 说 不 这叫暂时没炸"
+    },
+    {
+      "id": "lyric-utterance-11",
+      "text": "自动化机器人忽然响了一声 我已经帮你们打好补丁"
+    },
+    {
+      "id": "lyric-utterance-12",
+      "text": "屏幕最下方只剩一句 下次记得先写测试"
+    }
+  ],
+  "captions": [
+    {
+      "id": "lyric-1",
+      "text": "凌晨两点我还盯着 CI 的红灯",
+      "utteranceId": "lyric-utterance-1",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "lyric-2",
+      "text": "群里有人说这次应该只是缓存抖了一层",
+      "utteranceId": "lyric-utterance-2",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "lyric-3",
+      "text": "我把日志翻到底 它却回我一句 undefined",
+      "utteranceId": "lyric-utterance-3",
+      "layoutKey": "up"
+    },
+    {
+      "id": "lyric-4",
+      "text": "于是小黄鸭站上键盘 开始主持复盘晨会",
+      "utteranceId": "lyric-utterance-4",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "lyric-5",
+      "text": "第一条结论 不要在周五上线后改鉴权",
+      "utteranceId": "lyric-utterance-5",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "lyric-6",
+      "text": "第二条结论 不要把测试库地址写进生产",
+      "utteranceId": "lyric-utterance-6",
+      "layoutKey": "up"
+    },
+    {
+      "id": "lyric-7",
+      "text": "第三条结论 如果非要改 先让回滚脚本活着",
+      "utteranceId": "lyric-utterance-7",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "lyric-8",
+      "text": "监控终于从满屏告警 变成了一条温柔的绿线",
+      "utteranceId": "lyric-utterance-8",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "lyric-9",
+      "text": "实习生抬头问 哥 现在是不是算系统稳定了",
+      "utteranceId": "lyric-utterance-9",
+      "layoutKey": "up"
+    },
+    {
+      "id": "lyric-10",
+      "text": "老工程师喝了口冷咖啡 说 不 这叫暂时没炸",
+      "utteranceId": "lyric-utterance-10",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "lyric-11",
+      "text": "自动化机器人忽然响了一声 我已经帮你们打好补丁",
+      "utteranceId": "lyric-utterance-11",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "lyric-12",
+      "text": "屏幕最下方只剩一句 下次记得先写测试",
+      "utteranceId": "lyric-utterance-12",
+      "layoutKey": "up"
+    }
+  ],
+  "timings": [
+    {
+      "startMs": 0,
+      "endMs": 2800
+    },
+    {
+      "startMs": 2800,
+      "endMs": 5600
+    },
+    {
+      "startMs": 5600,
+      "endMs": 8900
+    },
+    {
+      "startMs": 8900,
+      "endMs": 12100
+    },
+    {
+      "startMs": 12100,
+      "endMs": 15400
+    },
+    {
+      "startMs": 15400,
+      "endMs": 18800
+    },
+    {
+      "startMs": 18800,
+      "endMs": 22600
+    },
+    {
+      "startMs": 22600,
+      "endMs": 26200
+    },
+    {
+      "startMs": 26200,
+      "endMs": 29700
+    },
+    {
+      "startMs": 29700,
+      "endMs": 33200
+    },
+    {
+      "startMs": 33200,
+      "endMs": 37200
+    },
+    {
+      "startMs": 37200,
+      "endMs": 40400
+    }
+  ]
+}

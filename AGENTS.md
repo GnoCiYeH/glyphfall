@@ -26,9 +26,20 @@
 - 输入层已支持 `speech`
   - 可直接接已切好的分段时间
   - 也可接逐词时间并在模板内部切分
+- 输入层已支持直接时间轴 `timings`
+  - 适合歌词、字幕稿等已经带时间轴的输入
+  - 如果顶层直接提供 `timings`，渲染时不会强制触发语音生成链路
+- 输入层已支持 `backgroundMusic`
+  - 可配置多条背景音乐轨道
+  - 每条轨道可配置开始时间、播放时长、淡入、淡出
+  - 顶层 `audioMix.ducking` 可基于语音时间自动压低背景音乐
 - 当前推荐输入入口是 `examples/*.json`
   - 人工维护字幕文本、画面参数、调试开关、视觉配置、位移配置、语音参数
+  - 也可在顶层 `backgroundMusic` 中配置多条背景音乐轨道
+  - 每条背景音乐可配置开始时间和播放时长
+  - 可通过 `scripts/parse_lyrics_file.mjs` 把 `.lrc` 歌词文件转成标准 GlyphFall JSON 配置，再在此之上继续手改
   - 示例文件当前放在 `examples/basic.json`
+  - 当前也有一份基于真实歌曲音频的 `examples/twinkle-demo.json`
   - 语音和时间等生成产物统一输出到 `build/<input-hash>/`
   - 如果多条字幕属于同一句完整话术，优先使用顶层 `utterances` 和字幕上的 `utteranceId` 保留原始断句
   - 如果一个视频里混用多个人声，优先在 `utterances` 上配置 `voice / rate / pitch / volume`
@@ -37,6 +48,9 @@
   - 负责创建 `.venv`
   - 负责安装语音链路需要的 Python 依赖
   - Windows 对应入口是 `scripts/install.ps1`
+- Studio 调试本地输入时，优先使用 `npm run studio:prepare -- --input <json>`
+  - 会把本地 JSON 和外部音频预处理到 `public/studio-input/`
+  - 预处理后在 Studio 中选择 `GlyphFallPreparedInput` composition 调试，不必每次渲染
 - `npm run render` 会在需要时自动补跑语音生成链路
   - 目标是避免手动重复执行 `speech:generate`
   - 仅当字幕输入文件 hash 变化、或产物缺失时才自动重跑

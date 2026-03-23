@@ -3,6 +3,7 @@ dist/
 out/
 build/
 public/studio-preview/
+public/studio-input/
 .DS_Store
 .vscode/
 *.log

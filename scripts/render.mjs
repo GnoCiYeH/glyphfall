@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import crypto from 'node:crypto';
+import {fileURLToPath} from 'node:url';
 import {bundle} from '@remotion/bundler';
 import {renderMedia, selectComposition} from '@remotion/renderer';
 
@@ -46,6 +47,15 @@ const defaultEffects = {
     rotation: 18,
     textRevealStart: 0.45,
     textRevealEnd: 0.85,
+  },
+};
+
+const defaultAudioMix = {
+  ducking: {
+    enabled: false,
+    volumeMultiplier: 0.4,
+    attackMs: 180,
+    releaseMs: 260,
   },
 };
 
@@ -129,6 +139,33 @@ const mergeLayoutMap = (inputLayoutMap = {}) => {
   return merged;
 };
 
+const toFrames = (value, fps) => Math.max(0, Math.round(value * fps));
+
+const getDurationInFrames = (timings, fps, tailHoldFrames = 0) => {
+  let cursor = 0;
+
+  for (const timing of timings) {
+    if ('startFrame' in timing && 'endFrame' in timing) {
+      cursor = Math.max(cursor, timing.endFrame);
+      continue;
+    }
+
+    if ('startMs' in timing && 'endMs' in timing) {
+      cursor = Math.max(cursor, toFrames(timing.endMs / 1000, fps));
+      continue;
+    }
+
+    if ('durationMs' in timing) {
+      cursor += toFrames(timing.durationMs / 1000, fps);
+      continue;
+    }
+
+    cursor += toFrames(timing.durationSeconds, fps);
+  }
+
+  return cursor + tailHoldFrames;
+};
+
 const getSpeechDurationInFrames = (speech, fps, tailHoldFrames) => {
   const segments = speech?.segments ?? [];
   if (segments.length === 0) {
@@ -139,11 +176,23 @@ const getSpeechDurationInFrames = (speech, fps, tailHoldFrames) => {
   return Math.ceil((lastEndMs / 1000) * fps) + tailHoldFrames;
 };
 
+const shouldUseDirectTimings = (projectConfig) => {
+  return Array.isArray(projectConfig.timings) && projectConfig.timings.length > 0;
+};
+
 const buildRenderProps = (projectConfig, generatedSpeech, audioDataUrl) => {
   const fps = projectConfig.fps ?? 30;
   const width = projectConfig.width ?? 1080;
   const height = projectConfig.height ?? 1920;
   const tailHoldFrames = projectConfig.tailHoldFrames ?? 36;
+  const directTimings = shouldUseDirectTimings(projectConfig) ? projectConfig.timings : null;
+  const speech =
+    generatedSpeech && audioDataUrl
+      ? {
+          ...generatedSpeech,
+          audioSrc: audioDataUrl,
+        }
+      : undefined;
 
   return {
     fps,
@@ -156,10 +205,15 @@ const buildRenderProps = (projectConfig, generatedSpeech, audioDataUrl) => {
       showCaptionBounds: true,
     },
     captions: projectConfig.captions,
-    timings: projectConfig.captions.map(() => ({durationSeconds: 1.8})),
-    speech: {
-      ...generatedSpeech,
-      audioSrc: audioDataUrl,
+    timings: directTimings ?? projectConfig.captions.map(() => ({durationSeconds: 1.8})),
+    speech,
+    backgroundMusic: resolveBackgroundMusicForRender(projectConfig.backgroundMusic ?? []),
+    audioMix: {
+      ...defaultAudioMix,
+      ducking: {
+        ...defaultAudioMix.ducking,
+        ...(projectConfig.audioMix?.ducking ?? {}),
+      },
     },
     layoutMap: mergeLayoutMap(projectConfig.layoutMap),
     visuals: {
@@ -177,7 +231,10 @@ const buildRenderProps = (projectConfig, generatedSpeech, audioDataUrl) => {
         ...(projectConfig.effects?.glyphAssemble ?? {}),
       },
     },
-    durationInFrames: getSpeechDurationInFrames(generatedSpeech, fps, tailHoldFrames),
+    durationInFrames:
+      speech
+        ? getSpeechDurationInFrames(generatedSpeech, fps, tailHoldFrames)
+        : getDurationInFrames(directTimings ?? [], fps, tailHoldFrames),
   };
 };
 
@@ -282,6 +339,53 @@ const fileToDataUrl = (filePath, mimeType) => {
   return `data:${mimeType};base64,${base64}`;
 };
 
+const guessAudioMimeType = (targetPath) => {
+  const extension = path.extname(targetPath).toLowerCase();
+  if (extension === '.mp3') {
+    return 'audio/mpeg';
+  }
+
+  if (extension === '.ogg' || extension === '.oga') {
+    return 'audio/ogg';
+  }
+
+  if (extension === '.wav') {
+    return 'audio/wav';
+  }
+
+  return 'application/octet-stream';
+};
+
+const resolveLocalAudioPath = (value) => {
+  if (typeof value !== 'string' || !value.trim()) {
+    return null;
+  }
+
+  if (value.startsWith('file:')) {
+    return fileURLToPath(value);
+  }
+
+  if (path.isAbsolute(value)) {
+    return value;
+  }
+
+  return null;
+};
+
+const resolveBackgroundMusicForRender = (backgroundMusic = []) => {
+  return backgroundMusic.map((cue) => {
+    const localPath = resolveLocalAudioPath(cue.src);
+    if (!localPath) {
+      return cue;
+    }
+
+    return {
+      ...cue,
+      src: fileToDataUrl(localPath, guessAudioMimeType(localPath)),
+    };
+  });
+};
+
 const {inputPath} = parseCliArgs();
 
 if (!fs.existsSync(inputPath)) {
@@ -299,6 +403,10 @@ const outputFileName = sanitizeFileName(inputConfig.outputVideoName || inputHash
 const outputLocation = path.join(buildRootDir, 'out', `${outputFileName}.mp4`);
 
 const shouldGenerateSpeechAssets = () => {
+  if (shouldUseDirectTimings(inputConfig)) {
+    return false;
+  }
+
   if (process.env.GLYPHFALL_SKIP_SPEECH_GENERATE === '1') {
     return false;
   }
@@ -339,13 +447,26 @@ const ensureSpeechAssets = () => {
 fs.mkdirSync(path.dirname(outputLocation), {recursive: true});
 ensureSpeechAssets();
 
-const generatedSpeech = loadJson(generatedSpeechOutput);
-const audioDataUrl = fileToDataUrl(narrationAudioOutput, 'audio/mpeg');
+const generatedSpeech = shouldUseDirectTimings(inputConfig) ? null : loadJson(generatedSpeechOutput);
+const audioDataUrl =
+  generatedSpeech && fs.existsSync(narrationAudioOutput)
+    ? fileToDataUrl(narrationAudioOutput, 'audio/mpeg')
+    : null;
 const renderProps = buildRenderProps(inputConfig, generatedSpeech, audioDataUrl);
 
 fs.writeFileSync(
   renderPropsOutput,
-  `${JSON.stringify({...renderProps, speech: {...generatedSpeech, audioSrc: narrationAudioOutput}}, null, 2)}\n`,
+  `${JSON.stringify(
+    {
+      ...renderProps,
+      speech:
+        generatedSpeech && audioDataUrl
+          ? {...generatedSpeech, audioSrc: narrationAudioOutput}
+          : undefined,
+    },
+    null,
+    2,
+  )}\n`,
   'utf8',
 );
 

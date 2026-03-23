@@ -63,6 +63,37 @@ export type SpeechSceneSource = {
   chunking?: Partial<SpeechChunkingConfig>;
 };
 
+export type BackgroundMusicCue = {
+  src: string;
+  startMs?: number;
+  startFrame?: number;
+  durationMs?: number;
+  durationFrames?: number;
+  volume?: number;
+  playbackRate?: number;
+  fadeInMs?: number;
+  fadeInFrames?: number;
+  fadeOutMs?: number;
+  fadeOutFrames?: number;
+};
+
+export type DuckingConfig = {
+  enabled: boolean;
+  volumeMultiplier: number;
+  attackMs?: number;
+  attackFrames?: number;
+  releaseMs?: number;
+  releaseFrames?: number;
+};
+
+export type AudioMixConfig = {
+  ducking: DuckingConfig;
+};
+
+export type AudioMixConfigInput = {
+  ducking?: Partial<DuckingConfig>;
+};
+
 export type CaptionTimingInput =
   | {
       startFrame: number;
@@ -210,6 +241,8 @@ export type GlyphFallSceneProps = {
   captions?: RawCaption[];
   timings?: CaptionTimingInput[];
   speech?: SpeechSceneSource;
+  backgroundMusic?: BackgroundMusicCue[];
+  audioMix?: AudioMixConfig;
   layoutMap: Record<string, CaptionLayoutConfig>;
   visuals: CaptionVisualConfig;
   effects?: EffectsConfig;
@@ -228,6 +261,7 @@ export type SubtitleProjectConfig = {
   tailHoldFrames?: number;
   backgroundColor?: string;
   outputVideoName?: string;
+  timings?: CaptionTimingInput[];
   debug?: {
     showContainerBounds?: boolean;
     showCaptionBounds?: boolean;
@@ -236,6 +270,8 @@ export type SubtitleProjectConfig = {
   effects?: EffectsConfigInput;
   layoutMap?: Record<string, CaptionLayoutConfigInput>;
   audioSrc?: string;
+  backgroundMusic?: BackgroundMusicCue[];
+  audioMix?: AudioMixConfigInput;
   voice?: string;
   rate?: string;
   pitch?: string;
