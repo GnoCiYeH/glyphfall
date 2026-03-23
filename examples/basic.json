@@ -5,6 +5,32 @@
   "tailHoldFrames": 36,
   "backgroundColor": "#09090b",
   "outputVideoName": "merge-conflict-at-midnight",
+  "backgroundMusic": [
+    {
+      "src": "music/game-bgm.ogg",
+      "startMs": 0,
+      "durationMs": 24000,
+      "volume": 0.24,
+      "fadeInMs": 900,
+      "fadeOutMs": 1400
+    },
+    {
+      "src": "music/beep-400ms.ogg",
+      "startMs": 6400,
+      "durationMs": 1200,
+      "volume": 0.18,
+      "fadeInFrames": 2,
+      "fadeOutFrames": 6
+    }
+  ],
+  "audioMix": {
+    "ducking": {
+      "enabled": true,
+      "volumeMultiplier": 0.42,
+      "attackMs": 180,
+      "releaseMs": 280
+    }
+  },
   "debug": {
     "showContainerBounds": false,
     "showCaptionBounds": false

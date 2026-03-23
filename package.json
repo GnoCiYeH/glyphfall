@@ -7,6 +7,8 @@
     "studio": "remotion studio src/index.ts",
     "render": "node scripts/render.mjs",
     "check": "tsc --noEmit",
+    "lyrics:parse": "node scripts/parse_lyrics_file.mjs",
+    "studio:prepare": "node scripts/prepare_studio_input.mjs",
     "speech:generate": "python3 scripts/generate_speech_assets.py",
     "speech:generate:examples": "node scripts/generate_example_previews.mjs"
   },

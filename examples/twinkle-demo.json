@@ -1,0 +1,263 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "tailHoldFrames": 54,
+  "backgroundColor": "#09090b",
+  "outputVideoName": "twinkle-demo",
+  "layoutSequence": [
+    "ccw",
+    "cw",
+    "up"
+  ],
+  "backgroundMusic": [
+    {
+      "src": "music/twinkle-twinkle-full-lyrics.ogg",
+      "startMs": 0,
+      "volume": 0.28,
+      "fadeInMs": 900,
+      "fadeOutMs": 1400
+    }
+  ],
+  "audioMix": {
+    "ducking": {
+      "enabled": false,
+      "volumeMultiplier": 0.4,
+      "attackMs": 180,
+      "releaseMs": 260
+    }
+  },
+  "debug": {
+    "showContainerBounds": false,
+    "showCaptionBounds": false
+  },
+  "visuals": {
+    "fontUrl": "fonts/SmileySans-Oblique.otf",
+    "fontFamily": "\"Smiley Sans\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "fontWeight": 800,
+    "autoFitFontSize": true,
+    "maxFontSize": 104,
+    "minFontSize": 56,
+    "lineHeightRatio": 1.16,
+    "maxTextWidth": 760,
+    "paddingX": 0,
+    "paddingY": 0,
+    "borderRadius": 0,
+    "activeAnchorY": 960,
+    "activeLetterSpacing": 2
+  },
+  "effects": {
+    "captionSettle": {
+      "enabled": false,
+      "preset": "outline-pop",
+      "durationFrames": 12,
+      "intensity": 0.22,
+      "color": "#f8fafc"
+    },
+    "glyphAssemble": {
+      "enabled": false,
+      "preset": "content-slices",
+      "durationFrames": 20,
+      "rows": 3,
+      "cols": 5,
+      "scatter": 24,
+      "rotation": 22,
+      "textRevealStart": 0.62,
+      "textRevealEnd": 0.96
+    }
+  },
+  "layoutMap": {
+    "ccw": {
+      "mode": "rotate_ccw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 1.08
+    },
+    "cw": {
+      "mode": "rotate_cw_90",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 14,
+      "scaleFactor": 0.92
+    },
+    "up": {
+      "mode": "translate_up",
+      "enterDurationFrames": 18,
+      "containerTransitionFrames": 12,
+      "scaleFactor": 1.04
+    }
+  },
+  "utterances": [
+    {
+      "id": "lyric-utterance-1",
+      "text": "Twinkle, twinkle, little star"
+    },
+    {
+      "id": "lyric-utterance-2",
+      "text": "How I wonder what you are"
+    },
+    {
+      "id": "lyric-utterance-3",
+      "text": "Up above the world so high"
+    },
+    {
+      "id": "lyric-utterance-4",
+      "text": "Like a diamond in the sky"
+    },
+    {
+      "id": "lyric-utterance-5",
+      "text": "When the blazing sun is gone"
+    },
+    {
+      "id": "lyric-utterance-6",
+      "text": "When he nothing shines upon"
+    },
+    {
+      "id": "lyric-utterance-7",
+      "text": "Then you show your little light"
+    },
+    {
+      "id": "lyric-utterance-8",
+      "text": "Twinkle, twinkle, all the night"
+    },
+    {
+      "id": "lyric-utterance-9",
+      "text": "Then the traveller in the dark"
+    },
+    {
+      "id": "lyric-utterance-10",
+      "text": "Thanks you for your tiny spark"
+    },
+    {
+      "id": "lyric-utterance-11",
+      "text": "How could he see where to go"
+    },
+    {
+      "id": "lyric-utterance-12",
+      "text": "If you did not twinkle so"
+    }
+  ],
+  "captions": [
+    {
+      "id": "lyric-1",
+      "text": "Twinkle, twinkle, little star",
+      "utteranceId": "lyric-utterance-1",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "lyric-2",
+      "text": "How I wonder what you are",
+      "utteranceId": "lyric-utterance-2",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "lyric-3",
+      "text": "Up above the world so high",
+      "utteranceId": "lyric-utterance-3",
+      "layoutKey": "up"
+    },
+    {
+      "id": "lyric-4",
+      "text": "Like a diamond in the sky",
+      "utteranceId": "lyric-utterance-4",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "lyric-5",
+      "text": "When the blazing sun is gone",
+      "utteranceId": "lyric-utterance-5",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "lyric-6",
+      "text": "When he nothing shines upon",
+      "utteranceId": "lyric-utterance-6",
+      "layoutKey": "up"
+    },
+    {
+      "id": "lyric-7",
+      "text": "Then you show your little light",
+      "utteranceId": "lyric-utterance-7",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "lyric-8",
+      "text": "Twinkle, twinkle, all the night",
+      "utteranceId": "lyric-utterance-8",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "lyric-9",
+      "text": "Then the traveller in the dark",
+      "utteranceId": "lyric-utterance-9",
+      "layoutKey": "up"
+    },
+    {
+      "id": "lyric-10",
+      "text": "Thanks you for your tiny spark",
+      "utteranceId": "lyric-utterance-10",
+      "layoutKey": "ccw"
+    },
+    {
+      "id": "lyric-11",
+      "text": "How could he see where to go",
+      "utteranceId": "lyric-utterance-11",
+      "layoutKey": "cw"
+    },
+    {
+      "id": "lyric-12",
+      "text": "If you did not twinkle so",
+      "utteranceId": "lyric-utterance-12",
+      "layoutKey": "up"
+    }
+  ],
+  "timings": [
+    {
+      "startMs": 0,
+      "endMs": 10500
+    },
+    {
+      "startMs": 10500,
+      "endMs": 21000
+    },
+    {
+      "startMs": 21000,
+      "endMs": 31500
+    },
+    {
+      "startMs": 31500,
+      "endMs": 42000
+    },
+    {
+      "startMs": 42000,
+      "endMs": 52500
+    },
+    {
+      "startMs": 52500,
+      "endMs": 63000
+    },
+    {
+      "startMs": 63000,
+      "endMs": 73500
+    },
+    {
+      "startMs": 73500,
+      "endMs": 84000
+    },
+    {
+      "startMs": 84000,
+      "endMs": 94500
+    },
+    {
+      "startMs": 94500,
+      "endMs": 105000
+    },
+    {
+      "startMs": 105000,
+      "endMs": 115500
+    },
+    {
+      "startMs": 115500,
+      "endMs": 118700
+    }
+  ]
+}
